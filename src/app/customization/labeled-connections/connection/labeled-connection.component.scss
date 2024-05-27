@@ -2,7 +2,7 @@
 @import "../../vars";
 
 svg {
-  @apply overflow-visible absolute pointer-events-none;
+  @apply overflow-visible absolute pointer-events-none z-[1];
 
   path {
     stroke-linecap: round;

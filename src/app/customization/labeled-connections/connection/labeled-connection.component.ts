@@ -17,7 +17,7 @@ import { Node } from 'src/app/rete';
       [style]="{
         transform: 'translate(' + point.x + 'px, ' + point.y + 'px)'
       }"
-      class="absolute top-0 left-0 block"
+      class="absolute top-0 left-0 block z-[2]"
     >
       <div
         class="absolute -translate-x-1/2  text-white rounded-xl whitespace-pre py-[0.2em] px-[0.6em] flex items-center gap-2"

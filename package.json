@@ -37,6 +37,7 @@
     "rete-context-menu-plugin": "^2.0.3",
     "rete-engine": "^2.0.1",
     "rete-minimap-plugin": "^2.0.2",
+    "rete-readonly-plugin": "^2.0.1",
     "rete-render-utils": "^2.0.2",
     "rete-scopes-plugin": "^2.0.1",
     "rxjs": "~7.8.0",

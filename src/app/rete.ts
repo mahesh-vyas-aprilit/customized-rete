@@ -21,12 +21,7 @@ import {
   Transformers,
 } from 'rete-connection-path-plugin';
 import { Injector } from '@angular/core';
-import { addCustomBackground } from './customization/custom-background';
-import {
-  ContextMenuExtra,
-  ContextMenuPlugin,
-  Presets as ContextMenuPresets,
-} from 'rete-context-menu-plugin';
+import { ContextMenuExtra } from 'rete-context-menu-plugin';
 import { MinimapExtra, MinimapPlugin } from 'rete-minimap-plugin';
 import { RerouteExtra, ReroutePlugin } from 'rete-connection-reroute-plugin';
 import {
@@ -42,7 +37,8 @@ import {
   LabeledConnectionComponent,
   Connection,
 } from './customization/labeled-connections';
-import { IStep } from './types';
+import { ReadonlyPlugin } from 'rete-readonly-plugin';
+import { IReteSettings, IStep } from './types';
 
 export type Node = NumberNode | AddNode | MyNode | StartingNode | EndNode;
 type Conn =
@@ -73,32 +69,28 @@ type AreaExtra =
 export async function createEditor(
   container: HTMLElement,
   injector: Injector,
+  settings: IReteSettings,
   apiNodes: IStep[]
 ) {
   const editor = new NodeEditor<Schemes>();
   const area = new AreaPlugin<Schemes, AreaExtra>(container);
   const connection = new ConnectionPlugin<Schemes, AreaExtra>();
   const angularRender = new AngularPlugin<Schemes, AreaExtra>({ injector });
-
-  const contextMenu = new ContextMenuPlugin<Schemes>({
-    items: ContextMenuPresets.classic.setup([
-      ['Number', () => new NumberNode(1, process)],
-      ['Add', () => new AddNode()],
-    ]),
-  });
-
-  const minimap = new MinimapPlugin<Schemes>();
+  const readonly = new ReadonlyPlugin<Schemes>();
   const reroutePlugin = new ReroutePlugin<Schemes>();
 
-  addCustomBackground(area);
-
+  editor.use(readonly.root);
   editor.use(area);
-
+  area.use(readonly.area);
   area.use(angularRender);
+  if (!settings.isReadOnly) {
+    area.use(connection);
+  }
 
-  area.use(connection);
-  area.use(contextMenu);
-  area.use(minimap);
+  if (settings.isMiniMap) {
+    const minimap = new MinimapPlugin<Schemes>();
+    area.use(minimap);
+  }
 
   angularRender.use(reroutePlugin);
 
@@ -146,7 +138,6 @@ export async function createEditor(
           return WorkflowNodeComponent;
         },
         connection() {
-          // return CustomConnectionComponent;
           return LabeledConnectionComponent;
         },
         socket() {
@@ -162,11 +153,6 @@ export async function createEditor(
       color: 'rgb(158, 159, 183)',
       marker: 'M-5,-10 L-5,10 L20,0 z',
     }),
-
-    // curve: () => curveStepAfter,
-    // curve: () => curveStepBefore,
-    // curve: () => curveMonotoneY,
-    // curve: () => curveBumpY,
   });
 
   angularRender.use(path);
@@ -262,15 +248,6 @@ export async function createEditor(
   async function process() {
     dataflow.reset();
 
-    // const sum = await dataflow.fetch(add.id);
-
-    // console.log(add.id, 'produces', sum);
-
-    // area.update(
-    //   'control',
-    //   (add.controls['result'] as Classic.InputControl<'number'>).id
-    // );
-
     area.update('control', 'result');
   }
   await process();
@@ -284,6 +261,12 @@ export async function createEditor(
     }
     return context;
   });
+
+  if (settings.isReadOnly) {
+    readonly.enable();
+  } else {
+    readonly.disable();
+  }
 
   return {
     destroy: () => {

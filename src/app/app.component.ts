@@ -8,7 +8,7 @@ import {
 import { SubSink } from 'subsink';
 import { createEditor } from './rete';
 import { WorkflowService } from './workflow.service';
-import { IStep } from './types';
+import { IReteSettings, IStep } from './types';
 
 @Component({
   selector: 'app-root',
@@ -21,10 +21,17 @@ export class AppComponent implements AfterViewInit {
   apiNodes!: IStep[];
   @ViewChild('rete') container!: ElementRef<HTMLElement>;
 
+  settings: IReteSettings;
+
   constructor(
     private injector: Injector,
     private workflowService: WorkflowService
-  ) {}
+  ) {
+    this.settings = {
+      isMiniMap: true,
+      isReadOnly: false,
+    };
+  }
 
   ngOnInit() {
     this.subs.add(
@@ -38,6 +45,7 @@ export class AppComponent implements AfterViewInit {
     await createEditor(
       this.container.nativeElement,
       this.injector,
+      this.settings,
       this.apiNodes
     );
   }

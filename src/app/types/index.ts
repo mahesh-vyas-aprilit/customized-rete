@@ -38,3 +38,8 @@ export type IWorkflow = {
   requestPrefix: string;
   isActive: boolean;
 };
+
+export type IReteSettings = {
+  isReadOnly: boolean;
+  isMiniMap: boolean;
+};
