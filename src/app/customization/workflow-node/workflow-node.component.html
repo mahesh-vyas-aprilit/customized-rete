@@ -1,0 +1,82 @@
+<div
+  *ngIf="data.label === 'Add'"
+  class="min-w-14 max-w-14 h-[104px] rounded-l-lg relative grid place-items-center"
+  style="background: orange"
+>
+  <span class="ki-outline ki-book text-white text-4xl"></span>
+</div>
+<ng-container *ngIf="data.label !== 'Add'">
+  <div
+    class="min-w-14 max-w-14 h-[104px] rounded-l-lg relative grid place-items-center"
+    style="background: #008f75"
+  >
+    <span class="ki-outline ki-happy-emoji text-white text-4xl"></span>
+  </div>
+</ng-container>
+
+<div
+  class="block min-w-[205px] text-center pt-[5px] px-2 pb-[11px] bg-[#f3f3fe] h-[104px] rounded-r-lg"
+>
+  <!-- Inputs -->
+  <div class="inputs">
+    <div
+      class="input"
+      *ngFor="let input of data.inputs | keyvalue : sortByIndex"
+      [attr.data-testid]="'input-' + input.key"
+    >
+      <div
+        class="input-socket"
+        refComponent
+        [data]="{
+          type: 'socket',
+          side: 'input',
+          key: input.key,
+          nodeId: data.id,
+          payload: input.value?.socket,
+          seed: seed
+        }"
+        [emit]="emit"
+        data-testid="input-socket"
+      ></div>
+    </div>
+  </div>
+
+  <!-- Title -->
+  <div class="text-sm text-[rgb(10, 21, 81)] font-semibold" data-testid="title">
+    {{ data.label }}
+  </div>
+
+  <!-- Controls -->
+  <div
+    class="control"
+    *ngFor="let control of data.controls | keyvalue : sortByIndex"
+    refComponent
+    [data]="{ type: 'control', payload: control.value }"
+    [emit]="emit"
+    [attr.data-testid]="'control-' + control.key"
+  ></div>
+
+  <!-- Output -->
+  <div class="outputs">
+    <div
+      class="output"
+      *ngFor="let output of data.outputs | keyvalue : sortByIndex"
+      [attr.data-testid]="'output-' + output.key"
+    >
+      <div
+        class="output-socket"
+        refComponent
+        [data]="{
+          type: 'socket',
+          side: 'output',
+          key: output.key,
+          nodeId: data.id,
+          payload: output.value?.socket,
+          seed: seed
+        }"
+        [emit]="emit"
+        data-testid="output-socket"
+      ></div>
+    </div>
+  </div>
+</div>

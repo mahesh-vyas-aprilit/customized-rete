@@ -1,0 +1,20 @@
+.full-width{
+  width: 100% !important;
+}
+
+
+.overAllLoading {
+  position: absolute;
+  background-color: white;
+
+  width: 100%;
+  height: calc( 100vh - 300px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 11000;
+  mat-spinner{
+    opacity: 1;
+  }
+}
+

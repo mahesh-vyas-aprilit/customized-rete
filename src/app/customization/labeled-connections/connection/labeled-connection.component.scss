@@ -1,0 +1,15 @@
+@use "sass:math";
+@import "../../vars";
+
+svg {
+  @apply overflow-visible absolute pointer-events-none;
+
+  path {
+    stroke-linecap: round;
+    @apply fill-none stroke-2 pointer-events-auto stroke-[#9e9fb7];
+
+    &.selected {
+      @apply stroke-blue-800;
+    }
+  }
+}

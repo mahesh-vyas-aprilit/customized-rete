@@ -1,0 +1,5 @@
+@import "../vars";
+
+:host {
+  @apply border w-4 h-4 z-10 inline-block cursor-pointer hover:scale-110 transition-all duration-500 ease-in-out rounded-full opacity-50 hover:opacity-100 align-middle bg-[#0a1551];
+}

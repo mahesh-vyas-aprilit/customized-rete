@@ -1,0 +1,42 @@
+.mat-mdc-progress-bar {
+  &.green {
+    .mdc-linear-progress__bar-inner {
+      @apply border-green-500;
+    }
+    .mdc-linear-progress__buffer-bar {
+      @apply bg-green-100;
+    }
+  }
+  &.orange {
+    .mdc-linear-progress__bar-inner {
+      @apply border-orange-500;
+    }
+    .mdc-linear-progress__buffer-bar {
+      @apply bg-orange-100;
+    }
+  }
+  &.yellow {
+    .mdc-linear-progress__bar-inner {
+      @apply border-yellow-500;
+    }
+    .mdc-linear-progress__buffer-bar {
+      @apply bg-yellow-100;
+    }
+  }
+  &.red {
+    .mdc-linear-progress__bar-inner {
+      @apply border-red-500;
+    }
+    .mdc-linear-progress__buffer-bar {
+      @apply bg-red-100;
+    }
+  }
+  &.primary {
+    .mdc-linear-progress__bar-inner {
+      @apply border-blue-500;
+    }
+    .mdc-linear-progress__buffer-bar {
+      @apply bg-blue-100;
+    }
+  }
+}
