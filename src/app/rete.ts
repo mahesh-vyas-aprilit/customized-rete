@@ -41,6 +41,8 @@ import { ReadonlyPlugin } from 'rete-readonly-plugin';
 import { IReteSettings, IStep } from './types';
 import { curveStepAfter } from 'd3-shape';
 // import { easeInOut } from 'popmotion';
+// import { DockPlugin, DockPresets } from 'rete-dock-plugin';
+import { DockPlugin, DockPresets } from 'src/app/plugins/dock-plugin';
 
 export type Node = NumberNode | AddNode | MyNode | StartingNode | EndNode;
 type Conn =
@@ -75,6 +77,7 @@ export async function createEditor(
   const angularRender = new AngularPlugin<Schemes, AreaExtra>({ injector });
   const readonly = new ReadonlyPlugin<Schemes>();
   const reroutePlugin = new ReroutePlugin<Schemes>();
+  const dock = new DockPlugin<Schemes>();
 
   editor.use(readonly.root);
   editor.use(area);
@@ -107,7 +110,7 @@ export async function createEditor(
   );
 
   angularRender.use(reroutePlugin);
-
+  dock.addPreset(DockPresets.classic.setup({ area, size: 100, scale: 0.8 }));
   connection.addPreset(ConnectionPresets.classic.setup());
   angularRender.addPreset(AngularPresets.contextMenu.setup());
   angularRender.addPreset(AngularPresets.minimap.setup());
@@ -143,7 +146,7 @@ export async function createEditor(
         offset: (position, nodeId, side) => {
           return {
             x: position.x,
-            y: position.y + 12 * (side === 'input' ? -0.7 : 0),
+            y: position.y + 12 * (side === 'input' ? -0.1 : 0),
           };
         },
       }),
@@ -172,6 +175,12 @@ export async function createEditor(
 
   angularRender.use(path);
 
+  area.use(dock);
+  // editor.use(DockPlugin, {
+  //   container: document.querySelector('.dock'),
+  //   plugins: [ReactRenderPlugin],
+  // });
+
   const dataflow = new DataflowEngine<Schemes>();
 
   editor.use(dataflow);
@@ -183,13 +192,17 @@ export async function createEditor(
 
     if (step.isFirstStep) {
       nodeData = new StartingNode(step.stepName, step.icon, step.color);
+      dock.add(() => new StartingNode(step.stepName, step.icon, step.color));
     } else if (step.isFinalStep) {
       nodeData = new EndNode(step.stepName, step.icon, step.color);
+      dock.add(() => new EndNode(step.stepName, step.icon, step.color));
     } else {
       nodeData = new MyNode(step.stepName, step.icon, step.color);
+      dock.add(() => new MyNode(step.stepName, step.icon, step.color));
     }
 
     nodeData.id = String(step.stepId);
+
     await editor.addNode(nodeData);
 
     nodeMap.set(step.stepId, nodeData);

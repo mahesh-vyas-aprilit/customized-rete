@@ -1,4 +1,6 @@
 <div
+  *ngIf="!data.isEndNode"
+  data-testid="icon"
   class="min-w-[54px] max-w-[54px] h-[52px] relative grid place-items-center"
 >
   <span
@@ -7,6 +9,14 @@
     }} text-[27px] leading-none"
   ></span>
 </div>
+
+<span
+  *ngIf="data.isEndNode"
+  data-testid="icon"
+  class="ki-outline ki-{{ data.icon }} text-{{
+    data.bgColor
+  }} text-[27px] leading-none"
+></span>
 
 <div
   class="absolute inset-0 bg-{{
@@ -31,31 +41,32 @@
     <span class="ki-outline ki-happy-emoji text-white text-4xl"></span>
   </div>
 </ng-container> -->
-<div class="text-sm font-semibold">
-  <!-- Inputs -->
-  <div class="inputs">
-    <div
-      class="input"
-      *ngFor="let input of data.inputs | keyvalue : sortByIndex"
-      [attr.data-testid]="'input-' + input.key"
-    >
-      <div
-        class="input-socket"
-        refComponent
-        [data]="{
-          type: 'socket',
-          side: 'input',
-          key: input.key,
-          nodeId: data.id,
-          payload: input.value?.socket,
-          seed: seed
-        }"
-        [emit]="emit"
-        data-testid="input-socket"
-      ></div>
-    </div>
-  </div>
 
+<!-- Inputs -->
+<div class="inputs">
+  <div
+    class="input"
+    *ngFor="let input of data.inputs | keyvalue : sortByIndex"
+    [attr.data-testid]="'input-' + input.key"
+  >
+    <div
+      class="input-socket"
+      refComponent
+      [data]="{
+        type: 'socket',
+        side: 'input',
+        key: input.key,
+        nodeId: data.id,
+        payload: input.value?.socket,
+        seed: seed
+      }"
+      [emit]="emit"
+      data-testid="input-socket"
+    ></div>
+  </div>
+</div>
+
+<div class="text-sm font-semibold">
   <!-- Title -->
   <div class="text-[#16203E] mb-[3px]" data-testid="title">
     {{ data.label }}

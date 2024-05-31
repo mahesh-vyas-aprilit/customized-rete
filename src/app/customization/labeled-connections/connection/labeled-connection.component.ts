@@ -14,10 +14,11 @@ import { Node } from 'src/app/rete';
 
     <!-- Conncetion label -->
     <div
+      *ngIf="data.label"
       [style]="{
         transform: 'translate(' + point.x + 'px, ' + point.y + 'px)'
       }"
-      class="absolute top-0 left-0 block z-[2]"
+      class="absolute top-0 left-0 block"
     >
       <div
         class="absolute -translate-x-1/2 -translate-y-1/2  whitespace-pre py-[2px] px-[15px] flex items-center gap-2 text-sm leading-5 rounded-[5px]"

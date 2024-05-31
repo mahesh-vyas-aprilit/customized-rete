@@ -20,15 +20,18 @@ export class WorkflowNodeComponent implements OnChanges {
   @Input() rendered!: () => void;
   // dynamicBgColor: string = '';
   seed = 0;
-  isEndNode: boolean = false;
 
   @HostBinding('class.selected') get selected() {
     return this.data.selected;
   }
 
-  // @HostBinding('class.group') get group() {
-  //   return true;
-  // }
+  @HostBinding('class.group') get group() {
+    return true;
+  }
+
+  @HostBinding('class.end-node') get padding() {
+    return this.data.isEndNode;
+  }
 
   // @HostBinding('style.backgroundColor') get bgColor() {
   //   return this.getBackgroundColor(this.dynamicBgColor);

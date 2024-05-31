@@ -122,7 +122,7 @@ export class EndNode extends Classic.Node implements DataflowNode {
   icon: string;
   bgColor: string;
   isEndNode = true;
-  isStartNode = true;
+  isStartNode = false;
 
   constructor(title: string, icon: string, bgColor: string) {
     super(title);

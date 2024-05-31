@@ -27,5 +27,20 @@
 @import "./assets/fonts/keenicons/outline/style.css";
 @import "./assets/fonts/keenicons/duotone/style.css";
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.dock {
+  @apply bg-white shadow-xl rounded-[15px] border top-1/2 flex flex-col z-10 -translate-y-1/2 h-[calc(100vh-2rem)] py-8;
+}
+.dock-item {
+  @apply m-0;
+}
