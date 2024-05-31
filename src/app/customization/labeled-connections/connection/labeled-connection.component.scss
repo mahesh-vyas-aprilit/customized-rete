@@ -2,14 +2,16 @@
 @import "../../vars";
 
 svg {
-  @apply overflow-visible absolute pointer-events-none z-[1];
+  @apply overflow-visible absolute pointer-events-none;
 
   path {
     stroke-linecap: round;
-    @apply fill-none stroke-2 pointer-events-auto stroke-[#9e9fb7];
+    stroke-dasharray: 6;
+    stroke-dashoffset: 6;
+    @apply fill-none stroke-2 pointer-events-auto stroke-[#8A99B0];
 
     &.selected {
-      @apply stroke-blue-800;
+      @apply stroke-blue;
     }
   }
 }

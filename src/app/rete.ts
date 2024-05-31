@@ -14,7 +14,7 @@ import {
 } from 'rete-angular-plugin/16';
 
 import { DataflowEngine } from 'rete-engine';
-import { AutoArrangePlugin } from 'rete-auto-arrange-plugin';
+import { ArrangeAppliers, AutoArrangePlugin } from 'rete-auto-arrange-plugin';
 import { getDOMSocketPosition } from 'rete-render-utils';
 import {
   ConnectionPathPlugin,
@@ -39,6 +39,8 @@ import {
 } from './customization/labeled-connections';
 import { ReadonlyPlugin } from 'rete-readonly-plugin';
 import { IReteSettings, IStep } from './types';
+import { curveStepAfter } from 'd3-shape';
+// import { easeInOut } from 'popmotion';
 
 export type Node = NumberNode | AddNode | MyNode | StartingNode | EndNode;
 type Conn =
@@ -53,11 +55,6 @@ type Conn =
   | Connection<MyNode, MyNode>
   | Connection<MyNode, EndNode>;
 type Schemes = GetSchemes<Node, Conn>;
-
-// class Connection<A extends Node, B extends Node> extends Classic.Connection<
-//   A,
-//   B
-// > {}
 
 type AreaExtra =
   | Area2D<Schemes>
@@ -91,6 +88,22 @@ export async function createEditor(
     const minimap = new MinimapPlugin<Schemes>();
     area.use(minimap);
   }
+
+  // const animatedApplier = new ArrangeAppliers.TransitionApplier<Schemes, never>(
+  //   {
+  //     duration: 500,
+  //     timingFunction: easeInOut,
+  //   }
+  // );
+  const animatedApplier = new ArrangeAppliers.TransitionApplier<Schemes, never>(
+    {
+      duration: 500,
+      timingFunction: (t) => t,
+      async onTick() {
+        await AreaExtensions.zoomAt(area, editor.getNodes());
+      },
+    }
+  );
 
   angularRender.use(reroutePlugin);
 
@@ -129,7 +142,7 @@ export async function createEditor(
         offset: (position, nodeId, side) => {
           return {
             x: position.x,
-            y: position.y + 12 * (side === 'input' ? -1 : 1),
+            y: position.y + 12 * (side === 'input' ? -0.7 : 0),
           };
         },
       }),
@@ -147,11 +160,12 @@ export async function createEditor(
     })
   );
 
-  const path = new ConnectionPathPlugin({
+  const path: any = new ConnectionPathPlugin({
     transformer: () => Transformers.classic({ vertical: true }),
+    curve: () => curveStepAfter,
     arrow: (c) => ({
-      color: 'rgb(158, 159, 183)',
-      marker: 'M-5,-10 L-5,10 L20,0 z',
+      color: '#8A99B0',
+      marker: 'M-5,-10 L-5,10 L15,0 z',
     }),
   });
 
@@ -167,11 +181,11 @@ export async function createEditor(
     let nodeData;
 
     if (step.isFirstStep) {
-      nodeData = new StartingNode(step.stepName);
+      nodeData = new StartingNode(step.stepName, step.icon, step.color);
     } else if (step.isFinalStep) {
-      nodeData = new EndNode(step.stepName);
+      nodeData = new EndNode(step.stepName, step.icon, step.color);
     } else {
-      nodeData = new MyNode(step.stepName, 'book');
+      nodeData = new MyNode(step.stepName, step.icon, step.color);
     }
 
     nodeData.id = String(step.stepId);
@@ -231,9 +245,10 @@ export async function createEditor(
     await arrange.layout({
       options: {
         'org.eclipse.elk.direction': 'DOWN',
-        'elk.spacing.nodeNode': '200',
-        'elk.layered.spacing.nodeNodeBetweenLayers': '50',
+        'elk.spacing.nodeNode': '300',
+        'elk.layered.spacing.nodeNodeBetweenLayers': '80',
       },
+      applier: animatedApplier,
     })
   );
 
@@ -269,6 +284,10 @@ export async function createEditor(
   }
 
   return {
+    layout: async (animate: boolean) => {
+      await arrange.layout({ applier: animate ? animatedApplier : undefined });
+      AreaExtensions.zoomAt(area, editor.getNodes());
+    },
     destroy: () => {
       area.destroy();
     },

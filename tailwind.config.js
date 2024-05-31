@@ -8,6 +8,11 @@ module.exports = {
       variants: ["hover", "focus"],
     },
     {
+      pattern:
+        /bg-(gray|grey|primary|secondary|navy|darkgrey|black|cyan|rosebrown|green|purple|yellow|red|orange|blue)/,
+      variants: ["hover", "focus"],
+    },
+    {
       pattern: /p(x|y|t|b|l|r|s|e)-(2|4|6|8|10|12|14|16|18)/,
     },
     {
@@ -23,7 +28,17 @@ module.exports = {
     },
     {
       pattern:
+        /border-(gray|grey|primary|secondary|navy|darkgrey|black|cyan|rosebrown|green|purple|yellow|red|orange|blue)/,
+      variants: ["hover", "focus"],
+    },
+    {
+      pattern:
         /text-(gray|grey|primary|secondary|navy|darkgrey|black|cyan|rosebrown|green|purple|yellow|red|orange)-(50|100|200|300|400|500|600|700|800|900|950)/,
+      variants: ["hover", "focus"],
+    },
+    {
+      pattern:
+        /text-(gray|grey|primary|secondary|navy|darkgrey|black|cyan|rosebrown|green|purple|yellow|red|orange|blue)/,
       variants: ["hover", "focus"],
     },
     {
@@ -41,6 +56,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        orange: "#FA7E22",
+        green: "#33D082",
+        red: "#FA2256",
+        purple: "#9766FF",
+        blue: "#2F82EB",
         grey: {
           50: "#fdfdfe",
           100: "#fafbfc",
@@ -153,34 +173,34 @@ module.exports = {
           A400: "#ff6ba8",
           A700: "#ff5299",
         },
-        green: {
-          DEFAULT: "#50CD89",
-          50: "#DFF6E9",
-          100: "#CFF1DF",
-          200: "#AFE8C9",
-          300: "#8FDFB4",
-          400: "#70D69E",
-          500: "#50CD89",
-          600: "#33B26D",
-          700: "#268652",
-          800: "#1A5B37",
-          900: "#0D2F1D",
-          950: "#07190F",
-        },
-        purple: {
-          DEFAULT: "#9747FF",
-          50: "#f7f2ff",
-          100: "#efe8ff",
-          200: "#e1d4ff",
-          300: "#ccb1ff",
-          400: "#b485ff",
-          500: "#9747ff",
-          600: "#9330f7",
-          700: "#851ee3",
-          800: "#6f18bf",
-          900: "#5b169c",
-          950: "#390b6a",
-        },
+        // green: {
+        //   DEFAULT: "#50CD89",
+        //   50: "#DFF6E9",
+        //   100: "#CFF1DF",
+        //   200: "#AFE8C9",
+        //   300: "#8FDFB4",
+        //   400: "#70D69E",
+        //   500: "#50CD89",
+        //   600: "#33B26D",
+        //   700: "#268652",
+        //   800: "#1A5B37",
+        //   900: "#0D2F1D",
+        //   950: "#07190F",
+        // },
+        // purple: {
+        //   DEFAULT: "#9747FF",
+        //   50: "#f7f2ff",
+        //   100: "#efe8ff",
+        //   200: "#e1d4ff",
+        //   300: "#ccb1ff",
+        //   400: "#b485ff",
+        //   500: "#9747ff",
+        //   600: "#9330f7",
+        //   700: "#851ee3",
+        //   800: "#6f18bf",
+        //   900: "#5b169c",
+        //   950: "#390b6a",
+        // },
         yellow: {
           DEFAULT: "#F6C000",
           "lightning-yellow": {

@@ -2,6 +2,8 @@ export type IStep = {
   id: number;
   workflowId: number;
   stepId: number;
+  icon: string;
+  color: string;
   stepName: string;
   code: string;
   isActive: boolean;

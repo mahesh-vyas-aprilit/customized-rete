@@ -20,13 +20,14 @@ import { Node } from 'src/app/rete';
       class="absolute top-0 left-0 block z-[2]"
     >
       <div
-        class="absolute -translate-x-1/2  text-white rounded-xl whitespace-pre py-[0.2em] px-[0.6em] flex items-center gap-2"
+        class="absolute -translate-x-1/2 -translate-y-1/2  whitespace-pre py-[2px] px-[15px] flex items-center gap-2 text-sm leading-5 rounded-[5px]"
         [style]="{
-          background: data.labelColor ?? '#5082b6'
+          background: getBackgroudColor(data.labelColor ?? ''),
+          color: getForegroundColor(data.labelColor ?? '')
         }"
       >
-        <i class="ki-outline ki-{{ data.labelIcon }}"></i>
-        <span>{{ text }}</span>
+        <i class="ki-outline ki-{{ data.labelIcon }} text-2xl leading-none"></i>
+        <span class="font-medium">{{ text }}</span>
       </div>
     </div> `,
   styleUrls: ['./labeled-connection.component.scss'],
@@ -41,6 +42,8 @@ export class LabeledConnectionComponent implements OnInit {
   text!: string;
   position!: LabelPosition;
   pathElement!: SVGPathElement;
+  backgroundColor: string = '';
+  foregroundColor: string = '';
 
   constructor() {}
 
@@ -51,6 +54,33 @@ export class LabeledConnectionComponent implements OnInit {
     } else {
       this.text = this.data.label?.text ?? '';
       this.position = this.data.label?.position ?? 'center';
+    }
+
+    if (this.data.labelColor) {
+      this.backgroundColor = this.getBackgroudColor(this.data.labelColor);
+      this.foregroundColor = this.getForegroundColor(this.data.labelColor);
+    }
+  }
+
+  getBackgroudColor(color: string) {
+    switch (color) {
+      case 'green':
+        return '#33D082';
+      case 'red':
+        return '#FA2222';
+      case 'orange':
+        return '#FA7E22';
+      default:
+        return '#33D082';
+    }
+  }
+
+  getForegroundColor(color: string) {
+    switch (color) {
+      case 'green':
+        return '#0B0F21';
+      default:
+        return '#FFFFFF';
     }
   }
 

@@ -69,12 +69,17 @@ export class FormNode extends Classic.Node implements DataflowNode {
 }
 
 export class MyNode extends Classic.Node {
-  width = 224;
-  height = 102;
+  width = 309;
+  height = 82;
   icon: string;
-  constructor(title: string, icon: string) {
+  bgColor: string;
+  isEndNode = false;
+  isStartNode = false;
+
+  constructor(title: string, icon: string, bgColor: string) {
     super(title);
     this.icon = icon;
+    this.bgColor = bgColor;
     this.addInput('value', new Classic.Input(socket, undefined, true));
     this.addOutput('value', new Classic.Output(socket));
   }
@@ -88,12 +93,17 @@ export class MyNode extends Classic.Node {
 }
 
 export class StartingNode extends Classic.Node implements DataflowNode {
-  width = 224;
-  height = 104;
+  width = 309;
+  height = 82;
+  icon: string;
+  bgColor: string;
+  isEndNode = false;
+  isStartNode = true;
 
-  constructor(title: string) {
+  constructor(title: string, icon: string, bgColor: string) {
     super(title);
-
+    this.icon = icon;
+    this.bgColor = bgColor;
     this.addOutput('value', new Classic.Output(socket));
   }
   data() {
@@ -107,12 +117,17 @@ export class StartingNode extends Classic.Node implements DataflowNode {
 }
 
 export class EndNode extends Classic.Node implements DataflowNode {
-  width = 224;
-  height = 104;
+  width = 103;
+  height = 54;
+  icon: string;
+  bgColor: string;
+  isEndNode = true;
+  isStartNode = true;
 
-  constructor(title: string) {
+  constructor(title: string, icon: string, bgColor: string) {
     super(title);
-
+    this.icon = icon;
+    this.bgColor = bgColor;
     this.addInput('value', new Classic.Input(socket));
   }
 

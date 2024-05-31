@@ -5,7 +5,7 @@ import {
   ChangeDetectorRef,
   OnChanges,
 } from '@angular/core';
-import { ClassicPreset } from 'rete';
+import { EndNode, MyNode, StartingNode } from '../nodes';
 
 @Component({
   templateUrl: './workflow-node.component.html',
@@ -15,21 +15,64 @@ import { ClassicPreset } from 'rete';
   },
 })
 export class WorkflowNodeComponent implements OnChanges {
-  @Input() data!: ClassicPreset.Node;
+  @Input() data!: MyNode | StartingNode | EndNode;
   @Input() emit!: (data: any) => void;
   @Input() rendered!: () => void;
-
+  // dynamicBgColor: string = '';
   seed = 0;
+  isEndNode: boolean = false;
 
   @HostBinding('class.selected') get selected() {
     return this.data.selected;
   }
+
+  // @HostBinding('style.backgroundColor') get bgColor() {
+  //   return this.getBackgroundColor(this.dynamicBgColor);
+  // }
+  // @HostBinding('style.borderColor') get borderColor() {
+  //   return this.getBorderColor(this.dynamicBgColor);
+  // }
+
+  // getBorderColor(color: string) {
+  //   switch (color) {
+  //     case 'orange':
+  //       return '#FA7E2233';
+  //     case 'red':
+  //       return '#FA225633';
+  //     case 'green':
+  //       return '#33D082';
+  //     case 'purple':
+  //       return '#9766FF33';
+  //     case 'blue':
+  //       return '#2F82EB33';
+  //     default:
+  //       return '#FA7E2214';
+  //   }
+  // }
+
+  // getBackgroundColor(color: string) {
+  //   switch (color) {
+  //     case 'orange':
+  //       return '#FA7E2214';
+  //     case 'red':
+  //       return '#FA225614';
+  //     case 'green':
+  //       return '#33D08214';
+  //     case 'purple':
+  //       return '#9766FF14';
+  //     case 'blue':
+  //       return '#2F82EB14';
+  //     default:
+  //       return '#FA7E2214';
+  //   }
+  // }
 
   constructor(private cdr: ChangeDetectorRef) {
     this.cdr.detach();
   }
 
   ngOnChanges(): void {
+    // this.dynamicBgColor = this.data.bgColor || '';
     this.cdr.detectChanges();
     requestAnimationFrame(() => this.rendered());
     this.seed++; // force render sockets
