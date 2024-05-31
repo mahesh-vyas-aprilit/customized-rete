@@ -95,6 +95,7 @@ export async function createEditor(
   //     timingFunction: easeInOut,
   //   }
   // );
+
   const animatedApplier = new ArrangeAppliers.TransitionApplier<Schemes, never>(
     {
       duration: 500,
@@ -248,7 +249,7 @@ export async function createEditor(
         'elk.spacing.nodeNode': '300',
         'elk.layered.spacing.nodeNodeBetweenLayers': '80',
       },
-      applier: animatedApplier,
+      applier: settings.shouldAnimate ? animatedApplier : undefined,
     })
   );
 

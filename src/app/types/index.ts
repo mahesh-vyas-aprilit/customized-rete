@@ -44,4 +44,5 @@ export type IWorkflow = {
 export type IReteSettings = {
   isReadOnly: boolean;
   isMiniMap: boolean;
+  shouldAnimate: boolean;
 };

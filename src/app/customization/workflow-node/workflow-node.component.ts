@@ -26,6 +26,10 @@ export class WorkflowNodeComponent implements OnChanges {
     return this.data.selected;
   }
 
+  // @HostBinding('class.group') get group() {
+  //   return true;
+  // }
+
   // @HostBinding('style.backgroundColor') get bgColor() {
   //   return this.getBackgroundColor(this.dynamicBgColor);
   // }

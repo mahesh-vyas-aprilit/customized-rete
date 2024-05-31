@@ -28,8 +28,9 @@ export class AppComponent implements AfterViewInit {
     private workflowService: WorkflowService
   ) {
     this.settings = {
-      isMiniMap: true,
+      isMiniMap: false,
       isReadOnly: false,
+      shouldAnimate: true,
     };
   }
 
