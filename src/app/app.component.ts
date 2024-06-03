@@ -3,6 +3,8 @@ import {
   Component,
   ElementRef,
   Injector,
+  OnDestroy,
+  OnInit,
   ViewChild,
 } from '@angular/core';
 import { SubSink } from 'subsink';
@@ -15,7 +17,7 @@ import { IReteSettings, IStep } from './types';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   title = 'angular';
   subs = new SubSink();
   apiNodes!: IStep[];
@@ -49,5 +51,9 @@ export class AppComponent implements AfterViewInit {
       this.settings,
       this.apiNodes
     );
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
   }
 }

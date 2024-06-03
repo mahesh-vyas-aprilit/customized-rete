@@ -1,0 +1,22 @@
+<div
+  class="min-w-[315px] bg-white shadow-xl rounded-[15px] border h-[calc(100vh-2rem)] py-[30px] px-[35px]"
+>
+  <div>
+    <h2 class="text-2xl font-semibold mb-[25px] text-[#16203E]">
+      Approval element
+    </h2>
+
+    <div class="flex flex-col gap-[25px]">
+      <div
+        *ngFor="let item of apiNodes"
+        class="flex items-center gap-2.5 text-[#8A99B0] cursor-pointer select-none"
+        (click)="handleAddNodeToCanvas(item)"
+      >
+        <span
+          class="ki-outline ki-{{ item.icon }} text-[27px] leading-none"
+        ></span>
+        <p class="text-lg font-medium">{{ item.stepName }}</p>
+      </div>
+    </div>
+  </div>
+</div>

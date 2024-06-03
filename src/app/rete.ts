@@ -42,7 +42,7 @@ import { IReteSettings, IStep } from './types';
 import { curveStepAfter } from 'd3-shape';
 // import { easeInOut } from 'popmotion';
 // import { DockPlugin, DockPresets } from 'rete-dock-plugin';
-import { DockPlugin, DockPresets } from 'src/app/plugins/dock-plugin';
+// import { DockPlugin, DockPresets } from 'src/app/plugins/dock-plugin';
 
 export type Node = NumberNode | AddNode | MyNode | StartingNode | EndNode;
 type Conn =
@@ -56,14 +56,18 @@ type Conn =
   | Connection<StartingNode, EndNode>
   | Connection<MyNode, MyNode>
   | Connection<MyNode, EndNode>;
-type Schemes = GetSchemes<Node, Conn>;
+export type Schemes = GetSchemes<Node, Conn>;
 
-type AreaExtra =
+export type AreaExtra =
   | Area2D<Schemes>
   | AngularArea2D<Schemes>
   | ContextMenuExtra
   | MinimapExtra
   | RerouteExtra;
+
+export const editor = new NodeEditor<Schemes>();
+
+export let area: AreaPlugin<Schemes, AreaExtra>;
 
 export async function createEditor(
   container: HTMLElement,
@@ -71,13 +75,12 @@ export async function createEditor(
   settings: IReteSettings,
   apiNodes: IStep[]
 ) {
-  const editor = new NodeEditor<Schemes>();
-  const area = new AreaPlugin<Schemes, AreaExtra>(container);
+  area = new AreaPlugin<Schemes, AreaExtra>(container);
   const connection = new ConnectionPlugin<Schemes, AreaExtra>();
   const angularRender = new AngularPlugin<Schemes, AreaExtra>({ injector });
   const readonly = new ReadonlyPlugin<Schemes>();
   const reroutePlugin = new ReroutePlugin<Schemes>();
-  const dock = new DockPlugin<Schemes>();
+  // const dock = new DockPlugin<Schemes>();
 
   editor.use(readonly.root);
   editor.use(area);
@@ -110,7 +113,7 @@ export async function createEditor(
   );
 
   angularRender.use(reroutePlugin);
-  dock.addPreset(DockPresets.classic.setup({ area, size: 100, scale: 0.8 }));
+  // dock.addPreset(DockPresets.classic.setup({ area, size: 100, scale: 0.8 }));
   connection.addPreset(ConnectionPresets.classic.setup());
   angularRender.addPreset(AngularPresets.contextMenu.setup());
   angularRender.addPreset(AngularPresets.minimap.setup());
@@ -175,11 +178,7 @@ export async function createEditor(
 
   angularRender.use(path);
 
-  area.use(dock);
-  // editor.use(DockPlugin, {
-  //   container: document.querySelector('.dock'),
-  //   plugins: [ReactRenderPlugin],
-  // });
+  // area.use(dock);
 
   const dataflow = new DataflowEngine<Schemes>();
 
@@ -197,15 +196,15 @@ export async function createEditor(
         step.color,
         step.description
       );
-      dock.add(
-        () =>
-          new StartingNode(
-            step.stepName,
-            step.icon,
-            step.color,
-            step.description
-          )
-      );
+      // dock.add(
+      //   () =>
+      //     new StartingNode(
+      //       step.stepName,
+      //       step.icon,
+      //       step.color,
+      //       step.description
+      //     )
+      // );
     } else if (step.isFinalStep) {
       nodeData = new EndNode(
         step.stepName,
@@ -213,10 +212,10 @@ export async function createEditor(
         step.color,
         step.description
       );
-      dock.add(
-        () =>
-          new EndNode(step.stepName, step.icon, step.color, step.description)
-      );
+      // dock.add(
+      //   () =>
+      //     new EndNode(step.stepName, step.icon, step.color, step.description)
+      // );
     } else {
       nodeData = new MyNode(
         step.stepName,
@@ -224,9 +223,9 @@ export async function createEditor(
         step.color,
         step.description
       );
-      dock.add(
-        () => new MyNode(step.stepName, step.icon, step.color, step.description)
-      );
+      // dock.add(
+      //   () => new MyNode(step.stepName, step.icon, step.color, step.description)
+      // );
     }
 
     nodeData.id = String(step.stepId);

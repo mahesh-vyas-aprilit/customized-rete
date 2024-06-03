@@ -75,11 +75,8 @@ export function setup<T>(props: {
     createItem(index) {
       const element = getNodeContainer(size, scale);
 
-      console.log(element, ' element');
       const beforeChild =
         typeof index !== 'undefined' ? container.children[index] : null;
-
-      console.log(container, ' container');
 
       container.insertBefore(element, beforeChild);
 
