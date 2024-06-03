@@ -43,7 +43,7 @@
 </ng-container> -->
 
 <!-- Inputs -->
-<div class="inputs">
+<div class="inputs group">
   <div
     class="input"
     *ngFor="let input of data.inputs | keyvalue : sortByIndex"
@@ -72,7 +72,7 @@
     {{ data.label }}
   </div>
 
-  <p class="text-[#8A99B0]" *ngIf="!data.isEndNode">Overtime request from</p>
+  <p class="text-[#8A99B0]" *ngIf="!data.isEndNode">{{ data.description }}</p>
 </div>
 
 <!-- Controls -->
@@ -86,7 +86,7 @@
 ></div> -->
 
 <!-- Output -->
-<div class="outputs">
+<div class="outputs group">
   <div
     class="output"
     *ngFor="let output of data.outputs | keyvalue : sortByIndex"

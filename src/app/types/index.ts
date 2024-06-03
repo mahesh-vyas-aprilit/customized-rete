@@ -4,6 +4,7 @@ export type IStep = {
   stepId: number;
   icon: string;
   color: string;
+  description: string;
   stepName: string;
   code: string;
   isActive: boolean;

@@ -73,13 +73,20 @@ export class MyNode extends Classic.Node {
   height = 82;
   icon: string;
   bgColor: string;
+  description: string;
   isEndNode = false;
   isStartNode = false;
 
-  constructor(title: string, icon: string, bgColor: string) {
+  constructor(
+    title: string,
+    icon: string,
+    bgColor: string,
+    description: string
+  ) {
     super(title);
     this.icon = icon;
     this.bgColor = bgColor;
+    this.description = description;
     this.addInput('value', new Classic.Input(socket, undefined, true));
     this.addOutput('value', new Classic.Output(socket));
   }
@@ -96,14 +103,21 @@ export class StartingNode extends Classic.Node implements DataflowNode {
   width = 309;
   height = 82;
   icon: string;
+  description: string;
   bgColor: string;
   isEndNode = false;
   isStartNode = true;
 
-  constructor(title: string, icon: string, bgColor: string) {
+  constructor(
+    title: string,
+    icon: string,
+    bgColor: string,
+    description: string
+  ) {
     super(title);
     this.icon = icon;
     this.bgColor = bgColor;
+    this.description = description;
     this.addOutput('value', new Classic.Output(socket));
   }
   data() {
@@ -121,13 +135,20 @@ export class EndNode extends Classic.Node implements DataflowNode {
   height = 54;
   icon: string;
   bgColor: string;
+  description: string;
   isEndNode = true;
   isStartNode = false;
 
-  constructor(title: string, icon: string, bgColor: string) {
+  constructor(
+    title: string,
+    icon: string,
+    bgColor: string,
+    description: string
+  ) {
     super(title);
     this.icon = icon;
     this.bgColor = bgColor;
+    this.description = description;
     this.addInput('value', new Classic.Input(socket));
   }
 

@@ -25,9 +25,9 @@ export class WorkflowNodeComponent implements OnChanges {
     return this.data.selected;
   }
 
-  @HostBinding('class.group') get group() {
-    return true;
-  }
+  // @HostBinding('class.group') get group() {
+  //   return true;
+  // }
 
   @HostBinding('class.end-node') get padding() {
     return this.data.isEndNode;

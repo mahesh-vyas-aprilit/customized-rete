@@ -191,14 +191,42 @@ export async function createEditor(
     let nodeData;
 
     if (step.isFirstStep) {
-      nodeData = new StartingNode(step.stepName, step.icon, step.color);
-      dock.add(() => new StartingNode(step.stepName, step.icon, step.color));
+      nodeData = new StartingNode(
+        step.stepName,
+        step.icon,
+        step.color,
+        step.description
+      );
+      dock.add(
+        () =>
+          new StartingNode(
+            step.stepName,
+            step.icon,
+            step.color,
+            step.description
+          )
+      );
     } else if (step.isFinalStep) {
-      nodeData = new EndNode(step.stepName, step.icon, step.color);
-      dock.add(() => new EndNode(step.stepName, step.icon, step.color));
+      nodeData = new EndNode(
+        step.stepName,
+        step.icon,
+        step.color,
+        step.description
+      );
+      dock.add(
+        () =>
+          new EndNode(step.stepName, step.icon, step.color, step.description)
+      );
     } else {
-      nodeData = new MyNode(step.stepName, step.icon, step.color);
-      dock.add(() => new MyNode(step.stepName, step.icon, step.color));
+      nodeData = new MyNode(
+        step.stepName,
+        step.icon,
+        step.color,
+        step.description
+      );
+      dock.add(
+        () => new MyNode(step.stepName, step.icon, step.color, step.description)
+      );
     }
 
     nodeData.id = String(step.stepId);
