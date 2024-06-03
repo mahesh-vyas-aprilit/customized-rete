@@ -11,6 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LabeledConnectionComponent } from './customization/labeled-connections';
 import { WorkflowService } from './workflow.service';
 import { ClickStrategySidebarComponent } from './click-strategy-sidebar/click-strategy-sidebar.component';
+import { DragDropStrategySidebarComponent } from './drag-drop-strategy-sidebar/drag-drop-strategy-sidebar.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { ClickStrategySidebarComponent } from './click-strategy-sidebar/click-st
     WorkflowNodeComponent,
     LabeledConnectionComponent,
     ClickStrategySidebarComponent,
+    DragDropStrategySidebarComponent,
   ],
   imports: [BrowserModule, ReteModule, BrowserAnimationsModule],
   providers: [WorkflowService],
