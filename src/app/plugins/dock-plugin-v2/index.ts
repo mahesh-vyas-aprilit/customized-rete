@@ -60,14 +60,14 @@ export class DockPlugin<Schemes extends BaseSchemes> extends Scope<
 
       if (!element) continue;
 
-      this.parentScope().emit({
-        type: 'render',
-        data: {
-          type: 'node',
-          element,
-          payload: create(),
-        },
-      });
+      // this.parentScope().emit({
+      //   type: 'render',
+      //   data: {
+      //     type: 'node',
+      //     element,
+      //     payload: create(),
+      //   },
+      // });
 
       this.nodes.set(create, { preset, element });
       // this.clickStrategy.add(element, create);
