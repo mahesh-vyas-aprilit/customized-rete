@@ -54,13 +54,10 @@ function getNodeContainer(size: number, scale: number) {
 }
 
 function getNodeElement(name: string, icon: string): HTMLElement {
-  const element = document.createElement('span');
-  // const element = document.getElementsByClassName(
-  //   'data-dock'
-  // )[0] as HTMLElement;
+  const element = document.createElement('div');
   const elementData = `
   <div
-  class="flex items-center gap-2.5 text-[#8A99B0] cursor-pointer select-none"
+  class="flex items-center gap-2.5 text-[#8A99B0] cursor-pointer select-none px-[35px] py-2.5"
 >
   <span
     class="ki-outline ki-${icon} text-[27px] leading-none"
