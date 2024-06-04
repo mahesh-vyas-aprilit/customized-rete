@@ -44,6 +44,7 @@ import { easeInOut } from 'popmotion';
 // import { DockPlugin, DockPresets } from 'rete-dock-plugin';
 import { DockPlugin, DockPresets } from 'src/app/plugins/dock-plugin-v2';
 import { insertableNodes } from './plugins/insert-node';
+import { setupViewportBound } from './plugins/viewport-bound';
 
 export type Node = NumberNode | AddNode | MyNode | StartingNode | EndNode;
 type Conn =
@@ -320,6 +321,8 @@ export async function createEditor(
   );
 
   AreaExtensions.zoomAt(area, editor.getNodes());
+
+  setupViewportBound(area);
 
   AreaExtensions.simpleNodesOrder(area);
 
