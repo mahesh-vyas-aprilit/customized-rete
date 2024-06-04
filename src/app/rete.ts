@@ -40,9 +40,10 @@ import {
 import { ReadonlyPlugin } from 'rete-readonly-plugin';
 import { IReteSettings, IStep } from './types';
 import { curveStepAfter } from 'd3-shape';
-// import { easeInOut } from 'popmotion';
+import { easeInOut } from 'popmotion';
 // import { DockPlugin, DockPresets } from 'rete-dock-plugin';
 import { DockPlugin, DockPresets } from 'src/app/plugins/dock-plugin-v2';
+import { insertableNodes } from './plugins/insert-node';
 
 export type Node = NumberNode | AddNode | MyNode | StartingNode | EndNode;
 type Conn =
@@ -95,12 +96,13 @@ export async function createEditor(
     area.use(minimap);
   }
 
-  // const animatedApplier = new ArrangeAppliers.TransitionApplier<Schemes, never>(
-  //   {
-  //     duration: 500,
-  //     timingFunction: easeInOut,
-  //   }
-  // );
+  const animatedInsertNodeApplier = new ArrangeAppliers.TransitionApplier<
+    Schemes,
+    never
+  >({
+    duration: 500,
+    timingFunction: easeInOut,
+  });
 
   const animatedApplier = new ArrangeAppliers.TransitionApplier<Schemes, never>(
     {
@@ -320,6 +322,35 @@ export async function createEditor(
   AreaExtensions.zoomAt(area, editor.getNodes());
 
   AreaExtensions.simpleNodesOrder(area);
+
+  insertableNodes(area, {
+    async createConnections(node, connection) {
+      await editor.addConnection(
+        new Connection(
+          editor.getNode(connection.source),
+          connection.sourceOutput,
+          node,
+          'value'
+        )
+      );
+      await editor.addConnection(
+        new Connection(
+          node,
+          'value',
+          editor.getNode(connection.target),
+          connection.targetInput
+        )
+      );
+      arrange.layout({
+        options: {
+          'org.eclipse.elk.direction': 'DOWN',
+          'elk.spacing.nodeNode': '300',
+          'elk.layered.spacing.nodeNodeBetweenLayers': '80',
+        },
+        applier: animatedInsertNodeApplier,
+      });
+    },
+  });
 
   AreaExtensions.selectableNodes(area, AreaExtensions.selector(), {
     accumulating: AreaExtensions.accumulateOnCtrl(),
