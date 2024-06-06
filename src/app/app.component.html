@@ -22,7 +22,10 @@
   }
 </style>
 
+<button (click)="handleStoreInitialData()" class="mr-5">store</button>
+<button (click)="handleSaveChart()">save</button>
 <div class="flex items-center gap-5 pl-8">
-  <app-click-strategy-sidebar></app-click-strategy-sidebar>
+  <!-- <app-click-strategy-sidebar></app-click-strategy-sidebar> -->
+  <app-drag-drop-strategy-sidebar></app-drag-drop-strategy-sidebar>
   <div class="rete" #rete></div>
 </div>

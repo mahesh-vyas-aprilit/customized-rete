@@ -1,5 +1,7 @@
 import { ClassicPreset as Classic } from 'rete';
 import { DataflowNode } from 'rete-engine';
+import { IStep } from '../types';
+
 const socket = new Classic.Socket('socket');
 
 export class NumberNode extends Classic.Node implements DataflowNode {
@@ -71,22 +73,11 @@ export class FormNode extends Classic.Node implements DataflowNode {
 export class MyNode extends Classic.Node {
   width = 309;
   height = 82;
-  icon: string;
-  bgColor: string;
-  description: string;
-  isEndNode = false;
-  isStartNode = false;
+  stepData: IStep;
 
-  constructor(
-    title: string,
-    icon: string,
-    bgColor: string,
-    description: string
-  ) {
-    super(title);
-    this.icon = icon;
-    this.bgColor = bgColor;
-    this.description = description;
+  constructor(stepData: IStep) {
+    super(stepData.stepName);
+    this.stepData = stepData;
     this.addInput('value', new Classic.Input(socket, undefined, true));
     this.addOutput('value', new Classic.Output(socket));
   }
@@ -94,7 +85,6 @@ export class MyNode extends Classic.Node {
   data() {
     return {
       value: 0,
-      icon: this.icon,
     };
   }
 }
@@ -102,22 +92,11 @@ export class MyNode extends Classic.Node {
 export class StartingNode extends Classic.Node implements DataflowNode {
   width = 309;
   height = 82;
-  icon: string;
-  description: string;
-  bgColor: string;
-  isEndNode = false;
-  isStartNode = true;
+  stepData: IStep;
 
-  constructor(
-    title: string,
-    icon: string,
-    bgColor: string,
-    description: string
-  ) {
-    super(title);
-    this.icon = icon;
-    this.bgColor = bgColor;
-    this.description = description;
+  constructor(stepData: IStep) {
+    super(stepData.stepName);
+    this.stepData = stepData;
     this.addOutput('value', new Classic.Output(socket));
   }
   data() {
@@ -133,22 +112,11 @@ export class StartingNode extends Classic.Node implements DataflowNode {
 export class EndNode extends Classic.Node implements DataflowNode {
   width = 103;
   height = 54;
-  icon: string;
-  bgColor: string;
-  description: string;
-  isEndNode = true;
-  isStartNode = false;
+  stepData: IStep;
 
-  constructor(
-    title: string,
-    icon: string,
-    bgColor: string,
-    description: string
-  ) {
-    super(title);
-    this.icon = icon;
-    this.bgColor = bgColor;
-    this.description = description;
+  constructor(stepData: IStep) {
+    super(stepData.stepName);
+    this.stepData = stepData;
     this.addInput('value', new Classic.Input(socket));
   }
 
