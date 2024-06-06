@@ -389,6 +389,7 @@ export async function createEditor(
   } else {
     readonly.disable();
   }
+  // return editor;
 
   return {
     layout: async (animate: boolean) => {
@@ -398,21 +399,42 @@ export async function createEditor(
     saveModule: () => {
       return exportEditor(context);
     },
-    deleteNode: async (nodeId: string) => {
-      const connections = editor.getConnections().filter((c) => {
-        return c.source === nodeId || c.target === nodeId;
-      });
-
-      for (const connection of connections) {
-        await editor.removeConnection(connection.id);
-      }
-      await editor.removeNode(nodeId);
-    },
-    deleteConnection: async (connectionId: string) => {
-      await editor.removeConnection(connectionId);
-    },
+    editor,
+    area,
     destroy: () => {
       area.destroy();
     },
   };
+
+  // return {
+  //   layout: async (animate: boolean) => {
+  //     await arrange.layout({ applier: animate ? animatedApplier : undefined });
+  //     AreaExtensions.zoomAt(area, editor.getNodes());
+  //   },
+  //   saveModule: () => {
+  //     return exportEditor(context);
+  //   },
+  //   addNode: async (data: IStep) => {
+  //     const node = new MyNode(data);
+  //     await editor.addNode(node);
+  //   },
+  //   deleteNode: async (nodeId: string) => {
+  //     const connections = editor.getConnections().filter((c) => {
+  //       return c.source === nodeId || c.target === nodeId;
+  //     });
+
+  //     for (const connection of connections) {
+  //       await editor.removeConnection(connection.id);
+  //     }
+  //     await editor.removeNode(nodeId);
+
+  //     console.log('node removed => ', nodeId);
+  //   },
+  //   deleteConnection: async (connectionId: string) => {
+  //     await editor.removeConnection(connectionId);
+  //   },
+  //   destroy: () => {
+  //     area.destroy();
+  //   },
+  // };
 }

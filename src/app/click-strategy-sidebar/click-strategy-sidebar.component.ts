@@ -4,6 +4,7 @@ import { IStep } from '../types';
 import { WorkflowService } from '../workflow.service';
 import { area, editor } from '../rete';
 import { MyNode } from '../customization/nodes';
+import { ReteService } from '../services/rete.service';
 
 @Component({
   selector: 'app-click-strategy-sidebar',
@@ -14,7 +15,10 @@ export class ClickStrategySidebarComponent {
   subs = new SubSink();
   apiNodes!: IStep[];
 
-  constructor(private workflowService: WorkflowService) {}
+  constructor(
+    private workflowService: WorkflowService,
+    private reteService: ReteService
+  ) {}
 
   ngAfterViewInit(): void {
     this.subs.add(
@@ -27,11 +31,13 @@ export class ClickStrategySidebarComponent {
   async handleAddNodeToCanvas(item: IStep) {
     let node = new MyNode(item);
 
-    await editor.addNode(node);
+    //await editor.addNode(node);
 
-    const viewportCenter = this.getViewportCenter();
-    const view = area.nodeViews.get(node.id);
-    if (!view) throw new Error('view');
+    this.reteService.triggerEvent({ type: 'nodeAdded', data: node });
+
+    // const viewportCenter = this.getViewportCenter();
+    // const view = area.nodeViews.get(node.id);
+    // if (!view) throw new Error('view');
 
     // await view?.translate(viewportCenter.x, viewportCenter.y);
   }

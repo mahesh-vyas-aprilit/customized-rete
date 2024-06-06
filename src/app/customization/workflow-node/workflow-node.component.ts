@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { EndNode, MyNode, StartingNode } from '../nodes';
 import { IStep } from 'src/app/types';
+import { ReteService } from 'src/app/services/rete.service';
 
 @Component({
   templateUrl: './workflow-node.component.html',
@@ -75,7 +76,10 @@ export class WorkflowNodeComponent implements OnChanges {
   //   }
   // }
 
-  constructor(private cdr: ChangeDetectorRef) {
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private reteService: ReteService
+  ) {
     this.cdr.detach();
   }
 
@@ -84,6 +88,10 @@ export class WorkflowNodeComponent implements OnChanges {
     this.cdr.detectChanges();
     requestAnimationFrame(() => this.rendered());
     this.seed++; // force render sockets
+  }
+
+  handleNodeDelete(nodeId: string) {
+    this.reteService.triggerEvent({ type: 'nodeAdded', data: nodeId });
   }
 
   sortByIndex(a: any, b: any) {

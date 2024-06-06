@@ -122,7 +122,10 @@
   <button class="w-6 h-6 rounded-md bg-blue/20 grid place-items-center">
     <i class="ki-outline ki-copy text-blue"></i>
   </button>
-  <button class="w-6 h-6 rounded-md bg-red/20 grid place-items-center">
+  <button
+    (click)="handleNodeDelete(data.id)"
+    class="w-6 h-6 rounded-md bg-red/20 grid place-items-center"
+  >
     <i class="ki-outline ki-trash text-red"></i>
   </button>
 </div>
