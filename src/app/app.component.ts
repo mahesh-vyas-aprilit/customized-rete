@@ -8,9 +8,12 @@ import {
   ViewChild,
 } from '@angular/core';
 import { SubSink } from 'subsink';
-import { createEditor } from './rete';
-import { WorkflowService } from './workflow.service';
-import { IReteSettings, IStep } from './types';
+import { AreaExtra, Schemes, createEditor } from './shared/rete';
+import { WorkflowService } from './shared/services/workflow.service';
+import { IReteSettings, IStep } from './shared/types';
+import { ReteEvent, ReteService } from './shared/services/rete.service';
+import { NodeEditor } from 'rete';
+import { AreaPlugin } from 'rete-area-plugin';
 
 @Component({
   selector: 'app-root',
@@ -26,10 +29,13 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   settings: IReteSettings;
 
   saveModule!: () => IStep[];
+  editor!: NodeEditor<Schemes>;
+  area!: AreaPlugin<Schemes, AreaExtra>;
 
   constructor(
     private injector: Injector,
-    private workflowService: WorkflowService
+    private workflowService: WorkflowService,
+    private reteService: ReteService
   ) {
     this.settings = {
       isMiniMap: false,
@@ -44,17 +50,43 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         this.apiNodes = data;
       })
     );
+    this.subs.add(
+      this.reteService.chartUpdate.subscribe(async (data: ReteEvent) => {
+        switch (data.type) {
+          case 'nodeAdded':
+            await this.editor.addNode(data.data);
+            break;
+          case 'nodeDeleted':
+            const connections = this.editor.getConnections().filter((c) => {
+              return c.source === data.data || c.target === data.data;
+            });
+            for (const connection of connections) {
+              await this.editor.removeConnection(connection.id);
+            }
+            await this.editor.removeNode(data.data);
+            break;
+          default:
+            break;
+        }
+      })
+    );
   }
 
-  async ngAfterViewInit() {
-    const { saveModule } = await createEditor(
+  async createEditor() {
+    const { editor, area, saveModule } = await createEditor(
       this.container.nativeElement,
       this.injector,
       this.settings,
       this.apiNodes
     );
 
+    this.editor = editor;
+    this.area = area;
     this.saveModule = saveModule;
+  }
+
+  async ngAfterViewInit() {
+    await this.createEditor();
   }
 
   handleSaveChart() {
