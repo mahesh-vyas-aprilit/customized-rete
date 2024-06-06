@@ -54,11 +54,9 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
       this.reteService.chartUpdate.subscribe(async (data: ReteEvent) => {
         switch (data.type) {
           case 'nodeAdded':
-            // this.addNode(data.data);
             await this.editor.addNode(data.data);
             break;
           case 'nodeDeleted':
-            // this.deleteNode(data.data);
             const connections = this.editor.getConnections().filter((c) => {
               return c.source === data.data || c.target === data.data;
             });

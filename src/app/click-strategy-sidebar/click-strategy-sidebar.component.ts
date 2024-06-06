@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { SubSink } from 'subsink';
 import { IStep } from '../types';
 import { WorkflowService } from '../workflow.service';
-import { area, editor } from '../rete';
 import { MyNode } from '../customization/nodes';
 import { ReteService } from '../services/rete.service';
 
@@ -42,14 +41,14 @@ export class ClickStrategySidebarComponent {
     // await view?.translate(viewportCenter.x, viewportCenter.y);
   }
 
-  private getViewportCenter() {
-    const { x, y, k } = area.area.transform;
-    const box = area.container.getBoundingClientRect();
-    const halfWidth = box.width / 2 / k;
-    const halfHeight = box.height / 2 / k;
+  // private getViewportCenter() {
+  //   const { x, y, k } = this.area.area.transform;
+  //   const box = this.area.container.getBoundingClientRect();
+  //   const halfWidth = box.width / 2 / k;
+  //   const halfHeight = box.height / 2 / k;
 
-    return { x: halfWidth - x / k, y: halfHeight - y / k };
-  }
+  //   return { x: halfWidth - x / k, y: halfHeight - y / k };
+  // }
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
