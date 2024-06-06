@@ -7,12 +7,12 @@ import {
 } from '@angular/core';
 import { NodeEditor } from 'rete';
 import { AreaPlugin } from 'rete-area-plugin';
-import { AreaExtra, Node, Schemes } from '../rete';
+import { AreaExtra, Node, Schemes } from '../../rete';
 import { Position } from 'rete-area-plugin/_types/types';
 import { SubSink } from 'subsink';
-import { WorkflowService } from '../workflow.service';
-import { IStep } from '../types';
-import { MyNode } from '../customization/nodes';
+import { WorkflowService } from '../../services/workflow.service';
+import { IStep } from '../../types';
+import { MyNode } from '../../utils/nodes';
 
 @Component({
   selector: 'app-drag-drop-strategy-sidebar',

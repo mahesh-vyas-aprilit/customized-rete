@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { SubSink } from 'subsink';
-import { IStep } from '../types';
-import { WorkflowService } from '../workflow.service';
-import { MyNode } from '../customization/nodes';
-import { ReteService } from '../services/rete.service';
+import { IStep } from '../../types';
+import { WorkflowService } from '../../services/workflow.service';
+import { MyNode } from '../../utils/nodes';
+import { ReteService } from '../../services/rete.service';
 
 @Component({
   selector: 'app-click-strategy-sidebar',
@@ -29,8 +29,6 @@ export class ClickStrategySidebarComponent {
 
   async handleAddNodeToCanvas(item: IStep) {
     let node = new MyNode(item);
-
-    //await editor.addNode(node);
 
     this.reteService.triggerEvent({ type: 'nodeAdded', data: node });
 

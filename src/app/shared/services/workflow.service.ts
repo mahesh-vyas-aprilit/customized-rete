@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IStep } from './types';
+import { IStep } from '../types';
 import { Observable, of } from 'rxjs';
 
 @Injectable({

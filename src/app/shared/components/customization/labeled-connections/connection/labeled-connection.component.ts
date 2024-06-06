@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Connection, LabelPosition } from '../models';
-import { Node } from 'src/app/rete';
+import { Node } from 'src/app/shared/rete';
 
 @Component({
   selector: 'labeled-connection',

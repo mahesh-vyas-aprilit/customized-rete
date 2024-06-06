@@ -22,24 +22,23 @@ import { Injector } from '@angular/core';
 import { ContextMenuExtra } from 'rete-context-menu-plugin';
 import { MinimapExtra, MinimapPlugin } from 'rete-minimap-plugin';
 import { RerouteExtra, ReroutePlugin } from 'rete-connection-reroute-plugin';
-import { EndNode, MyNode, StartingNode } from './customization/nodes';
-import { WorkflowNodeComponent } from './customization/workflow-node/workflow-node.component';
-import { CustomSocketComponent } from './customization/custom-socket/custom-socket.component';
+import { EndNode, MyNode, StartingNode } from '../utils/nodes';
+import { WorkflowNodeComponent } from '../components/customization/workflow-node/workflow-node.component';
+import { CustomSocketComponent } from '../components/customization/custom-socket/custom-socket.component';
 import {
   LabeledConnectionComponent,
   Connection,
-} from './customization/labeled-connections';
+} from '../components/customization/labeled-connections';
 import { ReadonlyPlugin } from 'rete-readonly-plugin';
-import { IReteSettings, IStep } from './types';
+import { IReteSettings, IStep } from '../types';
 import { curveStepAfter } from 'd3-shape';
 import { easeInOut } from 'popmotion';
-import { insertableNodes } from './plugins/insert-node';
-import { setupViewportBound } from './plugins/viewport-bound';
-import { exportEditor } from './customization/import-export-nodes';
+import { insertableNodes } from '../plugins/insert-node';
+import { setupViewportBound } from '../plugins/viewport-bound';
+import { exportEditor } from '../utils/import-export-nodes';
 
 export type Node = MyNode | StartingNode | EndNode;
 export type Conn =
-  | Connection<MyNode, MyNode>
   | Connection<StartingNode, MyNode>
   | Connection<StartingNode, EndNode>
   | Connection<MyNode, MyNode>
@@ -77,6 +76,7 @@ export async function createEditor(
   editor.use(area);
   area.use(readonly.area);
   area.use(angularRender);
+
   if (!settings.isReadOnly) {
     area.use(connection);
   }
@@ -134,6 +134,7 @@ export async function createEditor(
         },
       })
   );
+
   angularRender.addPreset(
     AngularPresets.classic.setup({
       socketPositionWatcher: getDOMSocketPosition({
@@ -195,6 +196,7 @@ export async function createEditor(
 
     nodeMap.set(step.stepId, nodeData);
   }
+
   for (const step of apiNodes) {
     const node = nodeMap.get(step.stepId);
     if (node && step.workflowStepActionTemplates.length > 0) {
@@ -353,36 +355,4 @@ export async function createEditor(
       area.destroy();
     },
   };
-
-  // return {
-  //   layout: async (animate: boolean) => {
-  //     await arrange.layout({ applier: animate ? animatedApplier : undefined });
-  //     AreaExtensions.zoomAt(area, editor.getNodes());
-  //   },
-  //   saveModule: () => {
-  //     return exportEditor(context);
-  //   },
-  //   addNode: async (data: IStep) => {
-  //     const node = new MyNode(data);
-  //     await editor.addNode(node);
-  //   },
-  //   deleteNode: async (nodeId: string) => {
-  //     const connections = editor.getConnections().filter((c) => {
-  //       return c.source === nodeId || c.target === nodeId;
-  //     });
-
-  //     for (const connection of connections) {
-  //       await editor.removeConnection(connection.id);
-  //     }
-  //     await editor.removeNode(nodeId);
-
-  //     console.log('node removed => ', nodeId);
-  //   },
-  //   deleteConnection: async (connectionId: string) => {
-  //     await editor.removeConnection(connectionId);
-  //   },
-  //   destroy: () => {
-  //     area.destroy();
-  //   },
-  // };
 }

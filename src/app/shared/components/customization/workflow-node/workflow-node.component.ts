@@ -5,9 +5,9 @@ import {
   ChangeDetectorRef,
   OnChanges,
 } from '@angular/core';
-import { EndNode, MyNode, StartingNode } from '../nodes';
-import { IStep } from 'src/app/types';
-import { ReteService } from 'src/app/services/rete.service';
+import { EndNode, MyNode, StartingNode } from '../../../utils/nodes';
+import { IStep } from 'src/app/shared/types';
+import { ReteService } from 'src/app/shared/services/rete.service';
 
 @Component({
   templateUrl: './workflow-node.component.html',

@@ -16,7 +16,6 @@ export function setupViewportBound<S extends BaseSchemes, K>(
       // Adjust scaling to ensure better zooming capabilities
       const maxScale = Math.min(dx, dy);
 
-      // return { min: 0.1, max: Math.min(dx, dy) };
       return { min: 0.1, max: maxScale > 1 ? maxScale : 1 };
     },
     translation: () => {
@@ -24,15 +23,8 @@ export function setupViewportBound<S extends BaseSchemes, K>(
       const bbox = AreaExtensions.getBoundingBox(area, editor.getNodes());
       const viewport = getViewportSize(area);
 
-      const vertical = [-bbox.top * k, viewport.height - bbox.bottom * k];
       const horizontal = [-bbox.left * k, viewport.width - bbox.right * k];
 
-      // return {
-      //   left: Math.min(...horizontal),
-      //   top: Math.min(...vertical),
-      //   right: Math.max(...horizontal),
-      //   bottom: Math.max(...vertical)
-      // }
       return {
         left: Math.min(...horizontal),
         top: -Infinity, // Allow unlimited vertical scrolling
@@ -62,20 +54,8 @@ function nodeRestrictor<S extends BaseSchemes, K>(area: AreaPlugin<S, K>) {
         const rect = view.element.getBoundingClientRect();
         const viewport = getViewportSize(area);
         const left = -x / k;
-        const top = -y / k;
         const right = (viewport.width - x - rect.width) / k;
-        const bottom = (viewport.height - y - rect.height) / k;
 
-        // return {
-        //   ...context,
-        //   data: {
-        //     ...context.data,
-        //     position: {
-        //       x: Math.min(Math.max(left, context.data.position.x), right),
-        //       y: Math.min(Math.max(top, context.data.position.y), bottom),
-        //     },
-        //   },
-        // };
         return {
           ...context,
           data: {

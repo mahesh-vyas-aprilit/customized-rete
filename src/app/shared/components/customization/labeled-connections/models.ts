@@ -1,6 +1,5 @@
 import { ClassicPreset as Classic } from 'rete';
-import { Node } from 'src/app/rete';
-import { IActionTemplate } from 'src/app/types';
+import { Node } from 'src/app/shared/rete';
 
 export type LabelPosition = 'start' | 'center' | 'end';
 export type Label = { text: string; position?: LabelPosition };

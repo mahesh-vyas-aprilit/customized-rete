@@ -6,13 +6,7 @@ export function exportEditor(context: Context) {
   const connections: Conn[] = [];
 
   for (const n of context.editor.getNodes() as Node[]) {
-    // nodes.push({
-    //   id: n.id,
-    //   name: n.label,
-    //   data: n.stepData,
-    // });
     const position = context.area.nodeViews.get(n.id)?.position;
-    // const updatedNode = { ...n.stepData, position };
     nodes.push({
       ...n.stepData,
       // @ts-ignore

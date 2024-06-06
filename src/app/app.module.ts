@@ -1,25 +1,19 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
-import { CustomSocketComponent } from './customization/custom-socket/custom-socket.component';
-import { CustomNodeComponent } from './customization/custom-node/custom-node.component';
-import { CustomConnectionComponent } from './customization/custom-connection/custom-connection.component';
+import { CustomSocketComponent } from './shared/components/customization/custom-socket/custom-socket.component';
 import { ReteModule } from 'rete-angular-plugin/16';
-import { VerticalNodeComponent } from './customization/vertical-node/vertical-node.component';
-import { WorkflowNodeComponent } from './customization/workflow-node/workflow-node.component';
+import { WorkflowNodeComponent } from './shared/components/customization/workflow-node/workflow-node.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LabeledConnectionComponent } from './customization/labeled-connections';
-import { WorkflowService } from './workflow.service';
-import { ClickStrategySidebarComponent } from './click-strategy-sidebar/click-strategy-sidebar.component';
-import { DragDropStrategySidebarComponent } from './drag-drop-strategy-sidebar/drag-drop-strategy-sidebar.component';
+import { LabeledConnectionComponent } from './shared/components/customization/labeled-connections';
+import { WorkflowService } from './shared/services/workflow.service';
+import { ClickStrategySidebarComponent } from './shared/components/click-strategy-sidebar/click-strategy-sidebar.component';
+import { DragDropStrategySidebarComponent } from './shared/components/drag-drop-strategy-sidebar/drag-drop-strategy-sidebar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CustomSocketComponent,
-    CustomNodeComponent,
-    CustomConnectionComponent,
-    VerticalNodeComponent,
     WorkflowNodeComponent,
     LabeledConnectionComponent,
     ClickStrategySidebarComponent,

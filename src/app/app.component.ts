@@ -8,10 +8,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import { SubSink } from 'subsink';
-import { AreaExtra, Schemes, createEditor } from './rete';
-import { WorkflowService } from './workflow.service';
-import { IReteSettings, IStep } from './types';
-import { ReteEvent, ReteService } from './services/rete.service';
+import { AreaExtra, Schemes, createEditor } from './shared/rete';
+import { WorkflowService } from './shared/services/workflow.service';
+import { IReteSettings, IStep } from './shared/types';
+import { ReteEvent, ReteService } from './shared/services/rete.service';
 import { NodeEditor } from 'rete';
 import { AreaPlugin } from 'rete-area-plugin';
 
