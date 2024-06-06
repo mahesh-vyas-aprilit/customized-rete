@@ -25,12 +25,7 @@ export class ClickStrategySidebarComponent {
   }
 
   async handleAddNodeToCanvas(item: IStep) {
-    let node = new MyNode(
-      item.stepName,
-      item.icon,
-      item.color,
-      item.description
-    );
+    let node = new MyNode(item);
 
     await editor.addNode(node);
 

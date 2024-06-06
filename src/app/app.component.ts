@@ -25,6 +25,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   settings: IReteSettings;
 
+  saveModule!: () => IStep[];
+
   constructor(
     private injector: Injector,
     private workflowService: WorkflowService
@@ -45,12 +47,23 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async ngAfterViewInit() {
-    await createEditor(
+    const { saveModule } = await createEditor(
       this.container.nativeElement,
       this.injector,
       this.settings,
       this.apiNodes
     );
+
+    this.saveModule = saveModule;
+  }
+
+  handleSaveChart() {
+    const data = this.saveModule();
+    this.subs.add(this.workflowService.saveData(data).subscribe());
+  }
+
+  handleStoreInitialData() {
+    this.workflowService.storeDataInLocalStorage();
   }
 
   ngOnDestroy(): void {

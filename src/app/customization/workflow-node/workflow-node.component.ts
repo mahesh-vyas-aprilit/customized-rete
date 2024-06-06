@@ -6,6 +6,7 @@ import {
   OnChanges,
 } from '@angular/core';
 import { EndNode, MyNode, StartingNode } from '../nodes';
+import { IStep } from 'src/app/types';
 
 @Component({
   templateUrl: './workflow-node.component.html',
@@ -25,12 +26,12 @@ export class WorkflowNodeComponent implements OnChanges {
     return this.data.selected;
   }
 
-  // @HostBinding('class.group') get group() {
-  //   return true;
-  // }
+  @HostBinding('class.group/node-main') get group() {
+    return true;
+  }
 
   @HostBinding('class.end-node') get padding() {
-    return this.data.isEndNode;
+    return this.data.stepData.isFinalStep;
   }
 
   // @HostBinding('style.backgroundColor') get bgColor() {

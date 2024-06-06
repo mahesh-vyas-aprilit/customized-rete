@@ -12,10 +12,11 @@ export type IStep = {
   isFinalStep: boolean;
   workflowStepActionTemplates: IActionTemplate[];
   workflow: IWorkflow;
+  position?: IPosition;
 };
 
 export type IAction = {
-  id: number;
+  id: number | string;
   name: string;
   label: string;
   code: string;
@@ -25,13 +26,18 @@ export type IAction = {
 };
 
 export type IActionTemplate = {
-  id: number;
+  id: number | string;
   workflowId: number;
   stepId: number;
   actionTypeId: number;
   isJustificationRequired: boolean;
   isActive: boolean;
   actionType: IAction;
+};
+
+export type IPosition = {
+  x: number;
+  y: number;
 };
 
 export type IWorkflow = {

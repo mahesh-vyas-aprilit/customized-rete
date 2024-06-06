@@ -1,29 +1,29 @@
 <div
-  *ngIf="!data.isEndNode"
+  *ngIf="!data.stepData.isFinalStep"
   data-testid="icon"
   class="min-w-[54px] max-w-[54px] h-[52px] relative grid place-items-center"
 >
   <span
-    class="ki-outline ki-{{ data.icon }} text-{{
-      data.bgColor
+    class="ki-outline ki-{{ data.stepData.icon }} text-{{
+      data.stepData.color
     }} text-[27px] leading-none"
   ></span>
 </div>
 
 <span
-  *ngIf="data.isEndNode"
+  *ngIf="data.stepData.isFinalStep"
   data-testid="icon"
-  class="ki-outline ki-{{ data.icon }} text-{{
-    data.bgColor
+  class="ki-outline ki-{{ data.stepData.icon }} text-{{
+    data.stepData.color
   }} text-[27px] leading-none"
 ></span>
 
 <div
   class="absolute inset-0 bg-{{
-    data.bgColor
-  }} rounded-[9px] -z-[1] bg-opacity-10 border border-{{ data.bgColor }}  {{
-    data.bgColor !== 'green' ? 'border-opacity-20' : ''
-  }}"
+    data.stepData.color
+  }} rounded-[9px] -z-[1] bg-opacity-10 border border-{{
+    data.stepData.color
+  }}  {{ data.stepData.color !== 'green' ? 'border-opacity-20' : '' }}"
 ></div>
 
 <!-- <div
@@ -43,7 +43,7 @@
 </ng-container> -->
 
 <!-- Inputs -->
-<div class="inputs group">
+<div class="inputs group/inputs">
   <div
     class="input"
     *ngFor="let input of data.inputs | keyvalue : sortByIndex"
@@ -72,7 +72,9 @@
     {{ data.label }}
   </div>
 
-  <p class="text-[#8A99B0]" *ngIf="!data.isEndNode">{{ data.description }}</p>
+  <p class="text-[#8A99B0]" *ngIf="!data.stepData.isFinalStep">
+    {{ data.stepData.description }}
+  </p>
 </div>
 
 <!-- Controls -->
@@ -86,7 +88,7 @@
 ></div> -->
 
 <!-- Output -->
-<div class="outputs group">
+<div class="outputs group/outputs">
   <div
     class="output"
     *ngFor="let output of data.outputs | keyvalue : sortByIndex"
@@ -107,4 +109,20 @@
       data-testid="output-socket"
     ></div>
   </div>
+</div>
+
+<!-- side menu -->
+<div
+  *ngIf="!data.stepData.isFinalStep"
+  class="absolute transition-all ease-in-out duration-500 right-0 group-hover/node-main:-right-9 top-0 bottom-0 flex flex-col justify-between gap-[5px] bg-transparent group-hover/node-main:bg-white opacity-0 group-hover/node-main:opacity-100"
+>
+  <button class="w-6 h-6 rounded-md bg-purple/20 grid place-items-center">
+    <i class="ki-outline ki-setting-2 text-purple"></i>
+  </button>
+  <button class="w-6 h-6 rounded-md bg-blue/20 grid place-items-center">
+    <i class="ki-outline ki-copy text-blue"></i>
+  </button>
+  <button class="w-6 h-6 rounded-md bg-red/20 grid place-items-center">
+    <i class="ki-outline ki-trash text-red"></i>
+  </button>
 </div>

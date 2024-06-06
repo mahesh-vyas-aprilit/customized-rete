@@ -45,19 +45,29 @@ import { easeInOut } from 'popmotion';
 import { DockPlugin, DockPresets } from 'src/app/plugins/dock-plugin-v2';
 import { insertableNodes } from './plugins/insert-node';
 import { setupViewportBound } from './plugins/viewport-bound';
+import { exportEditor } from './customization/import-export-nodes';
 
-export type Node = NumberNode | AddNode | MyNode | StartingNode | EndNode;
-type Conn =
-  | Connection<NumberNode, AddNode>
-  | Connection<AddNode, AddNode>
-  | Connection<AddNode, NumberNode>
+export type Node = MyNode | StartingNode | EndNode;
+export type Conn =
   | Connection<MyNode, MyNode>
   | Connection<StartingNode, MyNode>
-  | Connection<StartingNode, AddNode>
-  | Connection<StartingNode, NumberNode>
   | Connection<StartingNode, EndNode>
   | Connection<MyNode, MyNode>
   | Connection<MyNode, EndNode>;
+
+// export type Node = NumberNode  | MyNode | StartingNode | EndNode;
+// type Conn =
+//   | Connection<NumberNode, AddNode>
+//   | Connection<AddNode, AddNode>
+//   | Connection<AddNode, NumberNode>
+//   | Connection<MyNode, MyNode>
+//   | Connection<StartingNode, MyNode>
+//   | Connection<StartingNode, AddNode>
+//   | Connection<StartingNode, NumberNode>
+//   | Connection<StartingNode, EndNode>
+//   | Connection<MyNode, MyNode>
+//   | Connection<MyNode, EndNode>;
+
 export type Schemes = GetSchemes<Node, Conn>;
 
 export type AreaExtra =
@@ -66,6 +76,13 @@ export type AreaExtra =
   | ContextMenuExtra
   | MinimapExtra
   | RerouteExtra;
+
+export type Context = {
+  process: () => void;
+  editor: NodeEditor<Schemes>;
+  area: AreaPlugin<Schemes, any>;
+  dataflow: DataflowEngine<Schemes>;
+};
 
 export const editor = new NodeEditor<Schemes>();
 
@@ -193,54 +210,22 @@ export async function createEditor(
     let nodeData;
 
     if (step.isFirstStep) {
-      nodeData = new StartingNode(
-        step.stepName,
-        step.icon,
-        step.color,
-        step.description
-      );
-      dock.add(
-        () =>
-          new StartingNode(
-            step.stepName,
-            step.icon,
-            step.color,
-            step.description
-          ),
-        step.stepName,
-        step.icon
-      );
+      nodeData = new StartingNode(step);
+      dock.add(() => new StartingNode(step), step.stepName, step.icon);
     } else if (step.isFinalStep) {
-      nodeData = new EndNode(
-        step.stepName,
-        step.icon,
-        step.color,
-        step.description
-      );
-      dock.add(
-        () =>
-          new EndNode(step.stepName, step.icon, step.color, step.description),
-        step.stepName,
-        step.icon
-      );
+      nodeData = new EndNode(step);
+      dock.add(() => new EndNode(step), step.stepName, step.icon);
     } else {
-      nodeData = new MyNode(
-        step.stepName,
-        step.icon,
-        step.color,
-        step.description
-      );
-      dock.add(
-        () =>
-          new MyNode(step.stepName, step.icon, step.color, step.description),
-        step.stepName,
-        step.icon
-      );
+      nodeData = new MyNode(step);
+      dock.add(() => new MyNode(step), step.stepName, step.icon);
     }
 
     nodeData.id = String(step.stepId);
 
     await editor.addNode(nodeData);
+    if (step.position) {
+      area.translate(nodeData.id, { x: step.position.x, y: step.position.y });
+    }
 
     nodeMap.set(step.stepId, nodeData);
   }
@@ -319,6 +304,12 @@ export async function createEditor(
       applier: settings.shouldAnimate ? animatedApplier : undefined,
     })
   );
+  const context: Context = {
+    process,
+    editor,
+    area,
+    dataflow,
+  };
 
   AreaExtensions.zoomAt(area, editor.getNodes());
 
@@ -333,15 +324,32 @@ export async function createEditor(
           editor.getNode(connection.source),
           connection.sourceOutput,
           node,
-          'value'
+          'value',
+          {
+            label: {
+              text: connection.label?.text!,
+              position: connection.label?.position,
+            },
+            labelColor: connection.labelColor,
+            labelIcon: connection.labelIcon,
+          }
         )
       );
+
       await editor.addConnection(
         new Connection(
           node,
           'value',
           editor.getNode(connection.target),
-          connection.targetInput
+          connection.targetInput,
+          {
+            label: {
+              text: 'Sent',
+              position: 'center',
+            },
+            labelColor: 'green',
+            labelIcon: 'check',
+          }
         )
       );
       arrange.layout({
@@ -386,6 +394,22 @@ export async function createEditor(
     layout: async (animate: boolean) => {
       await arrange.layout({ applier: animate ? animatedApplier : undefined });
       AreaExtensions.zoomAt(area, editor.getNodes());
+    },
+    saveModule: () => {
+      return exportEditor(context);
+    },
+    deleteNode: async (nodeId: string) => {
+      const connections = editor.getConnections().filter((c) => {
+        return c.source === nodeId || c.target === nodeId;
+      });
+
+      for (const connection of connections) {
+        await editor.removeConnection(connection.id);
+      }
+      await editor.removeNode(nodeId);
+    },
+    deleteConnection: async (connectionId: string) => {
+      await editor.removeConnection(connectionId);
     },
     destroy: () => {
       area.destroy();
