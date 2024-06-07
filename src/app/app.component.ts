@@ -2,13 +2,11 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  Injector,
   OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
 import { SubSink } from 'subsink';
-import { createEditor } from './shared/rete';
 import { WorkflowService } from './shared/services/workflow.service';
 import { type ReteEvent, ReteService } from './shared/services/rete.service';
 import type { IReteSettings, IStep } from './shared/types';
@@ -27,23 +25,20 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   apiNodes!: IStep[];
   @ViewChild('rete') container!: ElementRef<HTMLElement>;
 
-  settings: IReteSettings;
+  private readonly settings: IReteSettings = {
+    isMiniMap: false,
+    isReadOnly: false,
+    shouldAnimate: true,
+  };
 
   saveModule!: () => IStep[];
   editor!: NodeEditor<ISchemes>;
   area!: AreaPlugin<ISchemes, IAreaExtra>;
 
   constructor(
-    private injector: Injector,
     private workflowService: WorkflowService,
     private reteService: ReteService
-  ) {
-    this.settings = {
-      isMiniMap: false,
-      isReadOnly: false,
-      shouldAnimate: true,
-    };
-  }
+  ) {}
 
   ngOnInit() {
     this.subs.add(
@@ -53,50 +48,22 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     );
     this.subs.add(
       this.reteService.chartUpdate.subscribe(async (data: ReteEvent) => {
-        switch (data.type) {
-          case 'nodeAdded':
-            await this.editor.addNode(data.data);
-            break;
-          case 'nodeDeleted':
-            const connections = this.editor.getConnections().filter((c) => {
-              return c.source === data.data || c.target === data.data;
-            });
-            for (const connection of connections) {
-              await this.editor.removeConnection(connection.id);
-            }
-            await this.editor.removeNode(data.data);
-            break;
-
-          case 'nodeAddedWithClick':
-            await this.editor.addNode(data.data);
-            // const viewportCenter = getViewportCenter(this.area);
-            // const view = this.area.nodeViews.get(data.data.id);
-            // if (!view) throw new Error('view');
-
-            // await view?.translate(viewportCenter.x, viewportCenter.y);
-            break;
-          default:
-            break;
-        }
+        await this.reteService.handleChartUpdate(data);
       })
     );
   }
 
-  async createEditor() {
-    const { editor, area, saveModule } = await createEditor(
-      this.container.nativeElement,
-      this.injector,
-      this.settings,
-      this.apiNodes
-    );
+  async ngAfterViewInit() {
+    const { area, editor, saveModule } =
+      await this.reteService.createReteEditor(
+        this.container.nativeElement,
+        this.settings,
+        this.apiNodes
+      );
 
     this.editor = editor;
     this.area = area;
     this.saveModule = saveModule;
-  }
-
-  async ngAfterViewInit() {
-    await this.createEditor();
   }
 
   handleSaveChart() {
