@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { Connection, LabelPosition } from '../models';
-import { Node } from 'src/app/shared/rete';
+import { Connection } from '../models';
+import type { ILabelPosition, INode } from 'src/app/shared/types/rete-types';
 
 @Component({
   selector: 'labeled-connection',
@@ -35,13 +35,13 @@ import { Node } from 'src/app/shared/rete';
 })
 export class LabeledConnectionComponent implements OnInit {
   @ViewChild('pathREf', { static: false }) pathREf!: ElementRef<SVGPathElement>;
-  @Input() data!: Connection<Node, Node>;
+  @Input() data!: Connection<INode, INode>;
   @Input() start: any;
   @Input() end: any;
   @Input() path!: string;
 
   text!: string;
-  position!: LabelPosition;
+  position!: ILabelPosition;
   pathElement!: SVGPathElement;
   backgroundColor: string = '';
   foregroundColor: string = '';
@@ -79,7 +79,7 @@ export class LabeledConnectionComponent implements OnInit {
   getForegroundColor(color: string) {
     switch (color) {
       case 'green':
-        return '#0B0F21';
+        return '#FFFFFF';
       default:
         return '#FFFFFF';
     }

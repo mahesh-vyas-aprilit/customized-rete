@@ -1,6 +1,12 @@
-import { Position, Size } from './types';
+import type { IPosition, ISize } from '../../types';
 
-export function getInnerRadius(size: Size) {
+/**
+ * Calculates the inner radius of an element based on its size.
+ *
+ * @param {ISize} size - The size object containing the width and height of the element.
+ * @returns {number} The inner radius of the element.
+ */
+export function getInnerRadius(size: ISize): number {
   const width = size.width;
   const height = size.height;
   const minLength = Math.min(width, height);
@@ -8,11 +14,19 @@ export function getInnerRadius(size: Size) {
   return minLength / 2;
 }
 
+/**
+ * Checks if a rectangular element intersects with an SVG path element.
+ *
+ * @param {IPosition & ISize} rect - The position and size object of the rectangular element.
+ * @param {SVGPathElement} pathElement - The SVG path element to check for intersection.
+ * @param {number} [accuracy=1] - The accuracy of the intersection check (higher values for more accuracy).
+ * @returns {boolean} True if the rectangular element intersects with the SVG path element, false otherwise.
+ */
 export function checkElementIntersectPath(
-  rect: Position & Size,
+  rect: IPosition & ISize,
   pathElement: SVGPathElement,
-  accuracy = 1
-) {
+  accuracy: number = 1
+): boolean {
   const pathLength = pathElement.getTotalLength();
   const innerRectRadius = getInnerRadius(rect);
   const step = Math.max(pathLength / 100, innerRectRadius / accuracy);

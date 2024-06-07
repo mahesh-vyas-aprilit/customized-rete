@@ -1,12 +1,28 @@
 import { Injectable } from '@angular/core';
-import { IStep } from '../types';
+import type { IStep } from '../types';
 import { Observable, of } from 'rxjs';
 
+/**
+ * A service that manages workflow data, including retrieving, storing, and updating data.
+ *
+ * @class WorkflowService
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class WorkflowService {
+  /**
+   * The main data array containing workflow steps.
+   *
+   * @member {IStep[]} mainData
+   */
   mainData: IStep[] | undefined;
+
+  /**
+   * A dummy data array containing workflow steps.
+   *
+   * @member {IStep[]} dummyData
+   */
   dummyData: IStep[] = [
     {
       id: 1,
@@ -137,9 +153,9 @@ export class WorkflowService {
             code: 'send',
             direction: 'next',
             color: 'green',
-            icon: 'black-left',
+            // icon: 'black-left',
             // icon: 'arrows-circle',
-            // icon: 'check',
+            icon: 'check',
           },
         },
       ],
@@ -255,10 +271,18 @@ export class WorkflowService {
   ];
   constructor() {}
 
+  /**
+   * Stores the dummy data in the local storage.
+   */
   storeDataInLocalStorage(): void {
     localStorage.setItem('dummyData', JSON.stringify(this.dummyData));
   }
 
+  /**
+   * Retrieves data from the local storage or returns the dummy data if no data is stored.
+   *
+   * @returns {IStep[]} The retrieved or dummy data array.
+   */
   retrieveDataFromLocalStorage(): IStep[] {
     const storedData = localStorage.getItem('dummyData');
     if (storedData) {
@@ -269,15 +293,21 @@ export class WorkflowService {
     }
   }
 
+  /**
+   * Returns an Observable of the retrieved or dummy data array.
+   *
+   * @returns {Observable<IStep[]>} An Observable that emits the data array.
+   */
   getData(): Observable<IStep[]> {
-    // if (this.mainData) {
-    //   return of(this.mainData);
-    // } else {
-    //   return of(this.dummyData);
-    // }
     return of(this.retrieveDataFromLocalStorage());
   }
 
+  /**
+   * Saves the provided data to the local storage and returns an Observable with a success or error message.
+   *
+   * @param {IStep[]} data - The data array to be saved.
+   * @returns {Observable<string>} An Observable that emits a success or error message.
+   */
   saveData(data: IStep[]): Observable<string> {
     this.dummyData = data;
     try {

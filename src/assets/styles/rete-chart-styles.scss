@@ -1,0 +1,48 @@
+.workflow-node-styles {
+  @apply flex items-center gap-[7px] rounded-[9px] h-auto relative select-none box-border cursor-pointer z-[2] bg-white pl-2.5 pr-[30px] py-[15px] mx-auto;
+
+  &.end-node {
+    @apply pl-6 pr-6;
+  }
+
+  // .title {
+  //   color: white;
+  //   font-family: sans-serif;
+  //   font-size: 18px;
+  //   padding: 8px;
+  //   text-align: center;
+  // }
+
+  .output-socket {
+    @apply h-4 p-0;
+    text-align: right;
+    display: inline-block;
+  }
+
+  .input-socket {
+    @apply h-4 p-0;
+    text-align: right;
+    display: inline-block;
+  }
+
+  .inputs {
+    @apply h-4 absolute -top-2.5 left-0 right-0 text-center;
+    display: flex;
+    justify-content: space-around;
+    // margin-top: -1 * (math.div($socket-size, 2) + $socket-margin) + px;
+    // height: 16px;
+  }
+
+  .outputs {
+    @apply h-4 absolute -bottom-1 left-0 right-0;
+    display: flex;
+    justify-content: space-around;
+    // margin-bottom: -1 * (math.div($socket-size, 2) + $socket-margin) + px;
+    height: 16px;
+  }
+
+  .control {
+    display: block;
+    // padding: $socket-margin + px math.div($socket-size, 2) + $socket-margin + px;
+  }
+}

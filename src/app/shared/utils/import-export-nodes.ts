@@ -1,39 +1,47 @@
-import { Conn, Context, Node } from '../rete';
-import { IActionTemplate, IStep } from '../types';
+import type { IActionTemplate, IStep } from '../types';
+import type { IConnection, IContext, INode } from '../types/rete-types';
 
-export function exportEditor(context: Context) {
+/**
+ * Exports the editor's current state to an array of IStep objects.
+ * @param {IContext} context - The context containing the editor instance.
+ * @returns {IStep[]} - The exported steps.
+ */
+export function exportEditor(context: IContext): IStep[] {
   const nodes: IStep[] = [];
-  const connections: Conn[] = [];
+  const connections: IConnection[] = [];
 
-  for (const n of context.editor.getNodes() as Node[]) {
-    const position = context.area.nodeViews.get(n.id)?.position;
+  // Collect nodes with their position and initialize empty workflowStepActionTemplates
+  context.editor.getNodes().forEach((node: INode) => {
+    const position = context.area.nodeViews.get(node.id)?.position;
     nodes.push({
-      ...n.stepData,
+      ...node.stepData,
       // @ts-ignore
-      id: n.id,
+      id: node.id,
       // @ts-ignore
-      stepId: n.id,
+      stepId: node.id,
       position,
       workflowStepActionTemplates: [],
     });
-  }
+  });
 
-  for (const c of context.editor.getConnections()) {
+  // Collect connections
+  context.editor.getConnections().forEach((connection: IConnection) => {
     connections.push({
-      id: c.id,
-      source: c.source,
-      sourceOutput: c.sourceOutput,
-      target: c.target,
-      targetInput: c.targetInput,
+      id: connection.id,
+      source: connection.source,
+      sourceOutput: connection.sourceOutput,
+      target: connection.target,
+      targetInput: connection.targetInput,
       // new data
-      label: c.label,
-      labelColor: c.labelColor,
-      labelIcon: c.labelIcon,
+      label: connection.label,
+      labelColor: connection.labelColor,
+      labelIcon: connection.labelIcon,
     });
-  }
+  });
 
-  nodes.map((node) => {
-    connections.map((connection) => {
+  // Associate connections with the corresponding nodes
+  nodes.forEach((node) => {
+    connections.forEach((connection) => {
       if (String(connection.source) === String(node.stepId)) {
         const action: IActionTemplate = {
           id: connection.id,
@@ -46,11 +54,11 @@ export function exportEditor(context: Context) {
           actionType: {
             id: String(connection.id),
             name: 'Approve',
-            label: connection.label?.text!,
+            label: connection.label?.text || '',
             code: 'approve',
             direction: 'next',
-            color: connection.labelColor!,
-            icon: connection.labelIcon!,
+            color: connection.labelColor || '',
+            icon: connection.labelIcon || '',
           },
         };
         node.workflowStepActionTemplates.push(action);

@@ -1,11 +1,19 @@
 import { BaseSchemes, NodeEditor } from 'rete';
 import { AreaExtensions, AreaPlugin } from 'rete-area-plugin';
 
+/**
+ * Sets up the viewport bound for the area and restricts node movement within the viewport.
+ *
+ * @template S - The base schemes type.
+ * @template K - The additional area properties type.
+ * @param {AreaPlugin<S, K>} area - The area plugin instance.
+ */
 export function setupViewportBound<S extends BaseSchemes, K>(
   area: AreaPlugin<S, K>
 ) {
   const editor = area.parentScope<NodeEditor<S>>(NodeEditor);
 
+  // Set up the viewport restrictions for scaling and translation
   AreaExtensions.restrictor(area, {
     scaling: () => {
       const bbox = AreaExtensions.getBoundingBox(area, editor.getNodes());
@@ -34,14 +42,32 @@ export function setupViewportBound<S extends BaseSchemes, K>(
     },
   });
 
+  // Set up node movement restrictions
   nodeRestrictor(area);
 }
 
-const getViewportSize = <S extends BaseSchemes, K>(area: AreaPlugin<S, K>) => ({
+/**
+ * Returns the viewport size based on the area container dimensions.
+ *
+ * @template S - The base schemes type.
+ * @template K - The additional area properties type.
+ * @param {AreaPlugin<S, K>} area - The area plugin instance.
+ * @returns {{width: number, height: number}} The viewport size object.
+ */
+const getViewportSize = <S extends BaseSchemes, K>(
+  area: AreaPlugin<S, K>
+): { width: number; height: number } => ({
   width: area.container.clientWidth,
   height: area.container.clientHeight,
 });
 
+/**
+ * Restricts node movement within the viewport bounds.
+ *
+ * @template S - The base schemes type.
+ * @template K - The additional area properties type.
+ * @param {AreaPlugin<S, K>} area - The area plugin instance.
+ */
 function nodeRestrictor<S extends BaseSchemes, K>(area: AreaPlugin<S, K>) {
   area.addPipe((context) => {
     if (!context || typeof context !== 'object' || !('type' in context))

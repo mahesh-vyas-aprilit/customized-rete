@@ -6,7 +6,6 @@ import {
   OnChanges,
 } from '@angular/core';
 import { EndNode, MyNode, StartingNode } from '../../../utils/nodes';
-import { IStep } from 'src/app/shared/types';
 import { ReteService } from 'src/app/shared/services/rete.service';
 
 @Component({
@@ -28,6 +27,9 @@ export class WorkflowNodeComponent implements OnChanges {
   }
 
   @HostBinding('class.group/node-main') get group() {
+    return true;
+  }
+  @HostBinding('class.workflow-node-styles') get workflowStyles() {
     return true;
   }
 

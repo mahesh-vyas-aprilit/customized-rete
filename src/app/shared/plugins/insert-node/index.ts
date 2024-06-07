@@ -1,16 +1,25 @@
 import { BaseSchemes, GetSchemes, NodeEditor } from 'rete';
 import { AreaPlugin } from 'rete-area-plugin';
-import { Size } from 'rete-area-plugin/_types/types';
-import { Position } from './types';
 import { checkElementIntersectPath } from './utils';
+import type { IPosition, ISize } from '../../types';
 
 type Schemes = GetSchemes<
-  BaseSchemes['Node'] & Size,
+  BaseSchemes['Node'] & ISize,
   BaseSchemes['Connection']
 >;
 
+/**
+ * Checks if the provided position and size intersect with any of the given connections.
+ *
+ * @param {IPosition} position - The position object containing x and y coordinates.
+ * @param {Object} size - The size object containing width and height.
+ * @param {size.width} size.width - The width of the element.
+ * @param {size.height} size.height - The height of the element.
+ * @param {Array<[string, HTMLElement]>} connections - An array of connection IDs and their corresponding HTML elements.
+ * @returns {false|string} Returns the ID of the intersecting connection, or false if no intersection is found.
+ */
 export function checkIntersection(
-  position: Position,
+  position: IPosition,
   size: { width: number; height: number },
   connections: (readonly [string, HTMLElement])[]
 ): false | string {
@@ -38,6 +47,13 @@ type Props<S extends Schemes> = {
   ) => Promise<void>;
 };
 
+/**
+ * Adds a pipe to the area plugin that checks for node intersection and creates connections accordingly.
+ *
+ * @template S
+ * @param {AreaPlugin<S, any>} area - The area plugin instance.
+ * @param {Props<S>} props - An object containing the createConnections function.
+ */
 export function insertableNodes<S extends Schemes>(
   area: AreaPlugin<S, any>,
   props: Props<S>

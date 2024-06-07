@@ -8,12 +8,13 @@ import {
   ViewChild,
 } from '@angular/core';
 import { SubSink } from 'subsink';
-import { AreaExtra, Schemes, createEditor } from './shared/rete';
+import { createEditor } from './shared/rete';
 import { WorkflowService } from './shared/services/workflow.service';
-import { IReteSettings, IStep } from './shared/types';
-import { ReteEvent, ReteService } from './shared/services/rete.service';
-import { NodeEditor } from 'rete';
-import { AreaPlugin } from 'rete-area-plugin';
+import { type ReteEvent, ReteService } from './shared/services/rete.service';
+import type { IReteSettings, IStep } from './shared/types';
+import type { NodeEditor } from 'rete';
+import type { AreaPlugin } from 'rete-area-plugin';
+import type { IAreaExtra, ISchemes } from './shared/types/rete-types';
 
 @Component({
   selector: 'app-root',
@@ -29,8 +30,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   settings: IReteSettings;
 
   saveModule!: () => IStep[];
-  editor!: NodeEditor<Schemes>;
-  area!: AreaPlugin<Schemes, AreaExtra>;
+  editor!: NodeEditor<ISchemes>;
+  area!: AreaPlugin<ISchemes, IAreaExtra>;
 
   constructor(
     private injector: Injector,
@@ -64,6 +65,15 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
               await this.editor.removeConnection(connection.id);
             }
             await this.editor.removeNode(data.data);
+            break;
+
+          case 'nodeAddedWithClick':
+            await this.editor.addNode(data.data);
+            // const viewportCenter = getViewportCenter(this.area);
+            // const view = this.area.nodeViews.get(data.data.id);
+            // if (!view) throw new Error('view');
+
+            // await view?.translate(viewportCenter.x, viewportCenter.y);
             break;
           default:
             break;

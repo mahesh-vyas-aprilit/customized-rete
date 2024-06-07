@@ -1,5 +1,5 @@
-import { GetSchemes, NodeEditor } from 'rete';
-import { Area2D, AreaExtensions, AreaPlugin } from 'rete-area-plugin';
+import { NodeEditor } from 'rete';
+import { AreaExtensions, AreaPlugin } from 'rete-area-plugin';
 import {
   ClassicFlow,
   ConnectionPlugin,
@@ -8,7 +8,6 @@ import {
 } from 'rete-connection-plugin';
 import {
   AngularPlugin,
-  AngularArea2D,
   Presets as AngularPresets,
 } from 'rete-angular-plugin/16';
 import { DataflowEngine } from 'rete-engine';
@@ -19,10 +18,8 @@ import {
   Transformers,
 } from 'rete-connection-path-plugin';
 import { Injector } from '@angular/core';
-import { ContextMenuExtra } from 'rete-context-menu-plugin';
-import { MinimapExtra, MinimapPlugin } from 'rete-minimap-plugin';
-import { RerouteExtra, ReroutePlugin } from 'rete-connection-reroute-plugin';
-import { EndNode, MyNode, StartingNode } from '../utils/nodes';
+import { MinimapPlugin } from 'rete-minimap-plugin';
+import { ReroutePlugin } from 'rete-connection-reroute-plugin';
 import { WorkflowNodeComponent } from '../components/customization/workflow-node/workflow-node.component';
 import { CustomSocketComponent } from '../components/customization/custom-socket/custom-socket.component';
 import {
@@ -30,48 +27,31 @@ import {
   Connection,
 } from '../components/customization/labeled-connections';
 import { ReadonlyPlugin } from 'rete-readonly-plugin';
-import { IReteSettings, IStep } from '../types';
+import type { IReteSettings, IStep } from '../types';
 import { curveStepAfter } from 'd3-shape';
-import { easeInOut } from 'popmotion';
-import { insertableNodes } from '../plugins/insert-node';
 import { setupViewportBound } from '../plugins/viewport-bound';
 import { exportEditor } from '../utils/import-export-nodes';
-
-export type Node = MyNode | StartingNode | EndNode;
-export type Conn =
-  | Connection<StartingNode, MyNode>
-  | Connection<StartingNode, EndNode>
-  | Connection<MyNode, MyNode>
-  | Connection<MyNode, EndNode>;
-
-export type Schemes = GetSchemes<Node, Conn>;
-
-export type AreaExtra =
-  | Area2D<Schemes>
-  | AngularArea2D<Schemes>
-  | ContextMenuExtra
-  | MinimapExtra
-  | RerouteExtra;
-
-export type Context = {
-  process: () => void;
-  editor: NodeEditor<Schemes>;
-  area: AreaPlugin<Schemes, any>;
-  dataflow: DataflowEngine<Schemes>;
-};
+import { nodeAndConnectionSetup } from './node-and-connection-setup';
+import { registerInsertableNodes } from './register-insertable-nodes';
+import type {
+  IAreaExtra,
+  IContext,
+  IReteOutput,
+  ISchemes,
+} from '../types/rete-types';
 
 export async function createEditor(
   container: HTMLElement,
   injector: Injector,
   settings: IReteSettings,
   apiNodes: IStep[]
-) {
-  const area = new AreaPlugin<Schemes, AreaExtra>(container);
-  const connection = new ConnectionPlugin<Schemes, AreaExtra>();
-  const angularRender = new AngularPlugin<Schemes, AreaExtra>({ injector });
-  const readonly = new ReadonlyPlugin<Schemes>();
-  const reroutePlugin = new ReroutePlugin<Schemes>();
-  const editor = new NodeEditor<Schemes>();
+): Promise<IReteOutput> {
+  const area = new AreaPlugin<ISchemes, IAreaExtra>(container);
+  const connection = new ConnectionPlugin<ISchemes, IAreaExtra>();
+  const angularRender = new AngularPlugin<ISchemes, IAreaExtra>({ injector });
+  const readonly = new ReadonlyPlugin<ISchemes>();
+  const reroutePlugin = new ReroutePlugin<ISchemes>();
+  const editor = new NodeEditor<ISchemes>();
   editor.use(readonly.root);
   editor.use(area);
   area.use(readonly.area);
@@ -82,27 +62,20 @@ export async function createEditor(
   }
 
   if (settings.isMiniMap) {
-    const minimap = new MinimapPlugin<Schemes>();
+    const minimap = new MinimapPlugin<ISchemes>();
     area.use(minimap);
   }
 
-  const animatedInsertNodeApplier = new ArrangeAppliers.TransitionApplier<
-    Schemes,
+  const animatedApplier = new ArrangeAppliers.TransitionApplier<
+    ISchemes,
     never
   >({
     duration: 500,
-    timingFunction: easeInOut,
+    timingFunction: (t) => t,
+    async onTick() {
+      await AreaExtensions.zoomAt(area, editor.getNodes());
+    },
   });
-
-  const animatedApplier = new ArrangeAppliers.TransitionApplier<Schemes, never>(
-    {
-      duration: 500,
-      timingFunction: (t) => t,
-      async onTick() {
-        await AreaExtensions.zoomAt(area, editor.getNodes());
-      },
-    }
-  );
 
   angularRender.use(reroutePlugin);
   connection.addPreset(ConnectionPresets.classic.setup());
@@ -170,62 +143,14 @@ export async function createEditor(
 
   angularRender.use(path);
 
-  const dataflow = new DataflowEngine<Schemes>();
+  const dataflow = new DataflowEngine<ISchemes>();
 
   editor.use(dataflow);
 
-  const nodeMap = new Map<number, Node>();
+  // Adding nodes and connection to the rete canvas.
+  await nodeAndConnectionSetup(apiNodes, editor, area);
 
-  for (const step of apiNodes) {
-    let nodeData;
-
-    if (step.isFirstStep) {
-      nodeData = new StartingNode(step);
-    } else if (step.isFinalStep) {
-      nodeData = new EndNode(step);
-    } else {
-      nodeData = new MyNode(step);
-    }
-
-    nodeData.id = String(step.stepId);
-
-    await editor.addNode(nodeData);
-    if (step.position) {
-      area.translate(nodeData.id, { x: step.position.x, y: step.position.y });
-    }
-
-    nodeMap.set(step.stepId, nodeData);
-  }
-
-  for (const step of apiNodes) {
-    const node = nodeMap.get(step.stepId);
-    if (node && step.workflowStepActionTemplates.length > 0) {
-      for (const action of step.workflowStepActionTemplates) {
-        let targetStepId: number;
-
-        if (action.actionType.direction == 'last') {
-          targetStepId = apiNodes.at(-1)?.id!;
-        } else if (action.actionType.direction == 'previous') {
-          targetStepId = action.stepId - 1;
-        } else {
-          targetStepId = action.stepId;
-        }
-        const targetNode = nodeMap.get(targetStepId);
-
-        if (targetNode) {
-          await editor.addConnection(
-            new Connection(node, 'value', targetNode, 'value', {
-              label: { text: action.actionType.label, position: 'center' },
-              labelColor: action.actionType.color,
-              labelIcon: action.actionType.icon,
-            })
-          );
-        }
-      }
-    }
-  }
-
-  const arrange = new AutoArrangePlugin<Schemes>();
+  const arrange = new AutoArrangePlugin<ISchemes>();
 
   arrange.addPreset(() => {
     return {
@@ -255,7 +180,8 @@ export async function createEditor(
       applier: settings.shouldAnimate ? animatedApplier : undefined,
     })
   );
-  const context: Context = {
+
+  const context: IContext = {
     process,
     editor,
     area,
@@ -268,51 +194,8 @@ export async function createEditor(
 
   AreaExtensions.simpleNodesOrder(area);
 
-  insertableNodes(area, {
-    async createConnections(node, connection) {
-      await editor.addConnection(
-        new Connection(
-          editor.getNode(connection.source),
-          connection.sourceOutput,
-          node,
-          'value',
-          {
-            label: {
-              text: connection.label?.text!,
-              position: connection.label?.position,
-            },
-            labelColor: connection.labelColor,
-            labelIcon: connection.labelIcon,
-          }
-        )
-      );
-
-      await editor.addConnection(
-        new Connection(
-          node,
-          'value',
-          editor.getNode(connection.target),
-          connection.targetInput,
-          {
-            label: {
-              text: 'Sent',
-              position: 'center',
-            },
-            labelColor: 'green',
-            labelIcon: 'check',
-          }
-        )
-      );
-      arrange.layout({
-        options: {
-          'org.eclipse.elk.direction': 'DOWN',
-          'elk.spacing.nodeNode': '300',
-          'elk.layered.spacing.nodeNodeBetweenLayers': '80',
-        },
-        applier: animatedInsertNodeApplier,
-      });
-    },
-  });
+  // creating insertable nodes
+  await registerInsertableNodes(area, editor, arrange);
 
   AreaExtensions.selectableNodes(area, AreaExtensions.selector(), {
     accumulating: AreaExtensions.accumulateOnCtrl(),

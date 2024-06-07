@@ -1,33 +1,18 @@
-<style>
-  :host {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-      Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-      "Segoe UI Symbol";
-    font-size: 14px;
-    color: #333;
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  .rete {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    font-size: 1rem;
-    background: white;
-    padding: 1em;
-    text-align: left;
-    user-select: none;
-  }
-</style>
 <button (click)="handleStoreInitialData()" class="mr-5">store</button>
 <button (click)="handleSaveChart()">save</button>
 <div class="flex items-center gap-5 pl-8">
   <!-- <app-click-strategy-sidebar></app-click-strategy-sidebar> -->
+
   <app-drag-drop-strategy-sidebar
-    [area]="this.area"
-    [editor]="this.editor"
+    *ngIf="editor && area; else emptySidebar"
+    [area]="area"
+    [editor]="editor"
   ></app-drag-drop-strategy-sidebar>
+
   <div class="rete" #rete></div>
 </div>
+<ng-template #emptySidebar>
+  <div
+    class="min-w-[315px] bg-white shadow-xl rounded-[15px] border h-[calc(100vh-2rem)] py-[30px]"
+  ></div
+></ng-template>

@@ -1,14 +1,11 @@
 import { ClassicPreset as Classic } from 'rete';
-import { Node } from 'src/app/shared/rete';
-
-export type LabelPosition = 'start' | 'center' | 'end';
-export type Label = { text: string; position?: LabelPosition };
+import type { ILabel, INode } from 'src/app/shared/types/rete-types';
 
 export class Connection<
-  A extends Node,
-  B extends Node
+  A extends INode,
+  B extends INode
 > extends Classic.Connection<A, B> {
-  label?: Label;
+  label?: ILabel;
   labelColor?: string;
   labelIcon?: string;
 
@@ -18,7 +15,7 @@ export class Connection<
     target: B,
     targetInput: keyof B['outputs'],
     props?: {
-      label?: Label;
+      label?: ILabel;
       labelColor?: string;
       labelIcon?: string;
     }

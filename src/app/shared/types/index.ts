@@ -40,6 +40,11 @@ export type IPosition = {
   y: number;
 };
 
+export type ISize = {
+  width: number;
+  height: number;
+};
+
 export type IWorkflow = {
   id: number;
   name: string;
