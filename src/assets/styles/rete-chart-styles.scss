@@ -5,6 +5,29 @@
     @apply pl-6 pr-6;
   }
 
+  .workflow-icon-wrapper {
+    @apply min-w-[54px] max-w-[54px] h-[52px] relative grid place-items-center;
+  }
+  .workflow-icon {
+    @apply text-[27px] leading-none;
+  }
+
+  .workflow-node-bg {
+    @apply absolute inset-0 rounded-[9px] -z-[1] border;
+  }
+
+  .workflow-node-text-wrapper {
+    @apply text-sm font-semibold;
+
+    .label {
+      @apply text-[#16203E] mb-[3px];
+    }
+
+    .description {
+      @apply text-[#8A99B0];
+    }
+  }
+
   // .title {
   //   color: white;
   //   font-family: sans-serif;
@@ -49,4 +72,35 @@
 
 .workflow-socket-styles {
   @apply border w-4 h-4 z-[3] opacity-0 group-hover/inputs:opacity-100 group-hover/outputs:opacity-100 inline-block cursor-pointer hover:scale-110 transition-all duration-500 ease-in-out rounded-full bg-[#8A99B0];
+}
+
+.workflow-labeled-connection-svg {
+  @apply overflow-visible absolute pointer-events-none;
+
+  path {
+    stroke-linecap: round;
+    stroke-dasharray: 6;
+    stroke-dashoffset: 6;
+    @apply fill-none stroke-2 pointer-events-auto stroke-[#8A99B0];
+
+    &.selected {
+      @apply stroke-blue;
+    }
+  }
+}
+
+.workflow-label-container {
+  @apply absolute top-0 left-0 block;
+
+  .workflow-label-wrapper {
+    @apply absolute -translate-x-1/2 -translate-y-1/2  whitespace-pre py-[2px] px-[15px] flex items-center gap-2 text-sm leading-5 rounded-[5px] text-white;
+
+    .workflow-icon {
+      @apply text-2xl leading-none;
+    }
+
+    .workflow-label-text {
+      @apply font-medium;
+    }
+  }
 }

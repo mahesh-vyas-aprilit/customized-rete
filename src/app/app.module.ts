@@ -9,6 +9,8 @@ import { LabeledConnectionComponent } from './shared/components/customization/la
 import { WorkflowService } from './shared/services/workflow.service';
 import { ClickStrategySidebarComponent } from './shared/components/click-strategy-sidebar/click-strategy-sidebar.component';
 import { DragDropStrategySidebarComponent } from './shared/components/drag-drop-strategy-sidebar/drag-drop-strategy-sidebar.component';
+import { VerticalNodeComponent } from './shared/components/customization/vertical-node/vertical-node.component';
+import { WorkflowNodeV2Component } from './shared/components/customization/workflow-node-v2/workflow-node-v2.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +20,8 @@ import { DragDropStrategySidebarComponent } from './shared/components/drag-drop-
     LabeledConnectionComponent,
     ClickStrategySidebarComponent,
     DragDropStrategySidebarComponent,
+    VerticalNodeComponent,
+    WorkflowNodeV2Component,
   ],
   imports: [BrowserModule, ReteModule, BrowserAnimationsModule],
   providers: [WorkflowService],

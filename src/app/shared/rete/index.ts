@@ -12,11 +12,11 @@ import {
 } from 'rete-angular-plugin/16';
 import { DataflowEngine } from 'rete-engine';
 import { ArrangeAppliers, AutoArrangePlugin } from 'rete-auto-arrange-plugin';
-import { getDOMSocketPosition } from 'rete-render-utils';
+
 import {
   ConnectionPathPlugin,
   Transformers,
-} from 'rete-connection-path-plugin';
+} from '../plugins/connection-path-plugin';
 import { Injector } from '@angular/core';
 import { MinimapPlugin } from 'rete-minimap-plugin';
 import { ReroutePlugin } from 'rete-connection-reroute-plugin';
@@ -39,6 +39,7 @@ import type {
   IReteOutput,
   ISchemes,
 } from '../types/rete-types';
+import { getDOMSocketPosition } from 'rete-render-utils';
 
 export async function createEditor(
   container: HTMLElement,
@@ -118,9 +119,13 @@ export async function createEditor(
           };
         },
       }),
+      // socketPositionWatcher: new ComputedSocketPosition(),
+
       customize: {
         node() {
+          // return VerticalNodeComponent;
           return WorkflowNodeComponent;
+          // return WorkflowNodeV2Component;
         },
         connection() {
           return LabeledConnectionComponent;
@@ -137,7 +142,12 @@ export async function createEditor(
     curve: () => curveStepAfter,
     arrow: (c) => ({
       color: '#8A99B0',
-      marker: 'M-5,-10 L-5,10 L15,0 z',
+      marker: 'M-6,-5 L-6,6 L5.78,0 Z',
+      // marker: 'M-5.78,-5 L-5.78,5 L5.78,0 Z',
+      // marker: 'M-4.17,-8.33 L-4.17,8.33 L12.5,0 z',
+      // marker: 'M-5,-10 L-5,10 L15,0 z',
+      offset: -4,
+      // offset: -10,
     }),
   });
 

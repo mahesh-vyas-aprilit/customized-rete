@@ -1,7 +1,7 @@
 <div
   *ngIf="!data.stepData.isFinalStep"
   data-testid="icon"
-  class="min-w-[54px] max-w-[54px] h-[52px] relative grid place-items-center"
+  class="workflow-icon-wrapper"
 >
   <span
     class="ki-outline ki-{{ data.stepData.icon }} text-{{
@@ -19,9 +19,7 @@
 ></span>
 
 <div
-  class="absolute inset-0 bg-{{
-    data.stepData.color
-  }} rounded-[9px] -z-[1] bg-opacity-10 border border-{{
+  class=" bg-{{ data.stepData.color }} bg-opacity-10 workflow-node-bg  border-{{
     data.stepData.color
   }}  {{ data.stepData.color !== 'green' ? 'border-opacity-20' : '' }}"
 ></div>
@@ -66,13 +64,13 @@
   </div>
 </div>
 
-<div class="text-sm font-semibold">
+<div class="workflow-node-text-wrapper">
   <!-- Title -->
-  <div class="text-[#16203E] mb-[3px]" data-testid="title">
+  <div class="label" data-testid="title">
     {{ data.label }}
   </div>
 
-  <p class="text-[#8A99B0]" *ngIf="!data.stepData.isFinalStep">
+  <p class="description" *ngIf="!data.stepData.isFinalStep">
     {{ data.stepData.description }}
   </p>
 </div>

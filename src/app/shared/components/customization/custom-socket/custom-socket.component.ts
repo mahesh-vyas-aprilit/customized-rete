@@ -8,7 +8,6 @@ import {
 
 @Component({
   template: ``,
-  styleUrls: ['./custom-socket.component.scss'],
 })
 export class CustomSocketComponent implements OnChanges {
   @Input() data!: any;
@@ -16,6 +15,10 @@ export class CustomSocketComponent implements OnChanges {
 
   @HostBinding('title') get title() {
     return this.data.name;
+  }
+
+  @HostBinding('class.workflow-socket-styles') get workflowSocketStyles() {
+    return true;
   }
 
   constructor(private cdr: ChangeDetectorRef) {

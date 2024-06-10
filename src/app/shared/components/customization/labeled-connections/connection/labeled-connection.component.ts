@@ -6,6 +6,7 @@ import type { ILabelPosition, INode } from 'src/app/shared/types/rete-types';
   selector: 'labeled-connection',
   template: `<svg
       data-testid="connection"
+      class="workflow-labeled-connection-svg"
       (pointerdown)="$event.stopPropagation()"
     >
       <path class="hover-path" [attr.d]="path" />
@@ -14,24 +15,22 @@ import type { ILabelPosition, INode } from 'src/app/shared/types/rete-types';
 
     <!-- Conncetion label -->
     <div
-      *ngIf="data.label"
+      *ngIf="data.label?.text && data?.label?.text !== ''"
       [style]="{
         transform: 'translate(' + point.x + 'px, ' + point.y + 'px)'
       }"
-      class="absolute top-0 left-0 block"
+      class="workflow-label-container"
     >
       <div
-        class="absolute -translate-x-1/2 -translate-y-1/2  whitespace-pre py-[2px] px-[15px] flex items-center gap-2 text-sm leading-5 rounded-[5px]"
+        class="workflow-label-wrapper"
         [style]="{
-          background: getBackgroudColor(data.labelColor ?? ''),
-          color: getForegroundColor(data.labelColor ?? '')
+          background: getBackgroudColor(data.labelColor ?? '')
         }"
       >
-        <i class="ki-outline ki-{{ data.labelIcon }} text-2xl leading-none"></i>
-        <span class="font-medium">{{ text }}</span>
+        <i class="ki-outline ki-{{ data.labelIcon }} workflow-icon"></i>
+        <span class="workflow-label-text">{{ text }}</span>
       </div>
     </div> `,
-  styleUrls: ['./labeled-connection.component.scss'],
 })
 export class LabeledConnectionComponent implements OnInit {
   @ViewChild('pathREf', { static: false }) pathREf!: ElementRef<SVGPathElement>;
@@ -44,7 +43,6 @@ export class LabeledConnectionComponent implements OnInit {
   position!: ILabelPosition;
   pathElement!: SVGPathElement;
   backgroundColor: string = '';
-  foregroundColor: string = '';
 
   constructor() {}
 
@@ -59,7 +57,6 @@ export class LabeledConnectionComponent implements OnInit {
 
     if (this.data.labelColor) {
       this.backgroundColor = this.getBackgroudColor(this.data.labelColor);
-      this.foregroundColor = this.getForegroundColor(this.data.labelColor);
     }
   }
 
@@ -73,15 +70,6 @@ export class LabeledConnectionComponent implements OnInit {
         return '#FA7E22';
       default:
         return '#33D082';
-    }
-  }
-
-  getForegroundColor(color: string) {
-    switch (color) {
-      case 'green':
-        return '#FFFFFF';
-      default:
-        return '#FFFFFF';
     }
   }
 
